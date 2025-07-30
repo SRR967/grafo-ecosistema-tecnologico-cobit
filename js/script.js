@@ -4,7 +4,7 @@ const width = window.innerWidth - 300;
 const height = window.innerHeight;
 
 // 🔥 Cargar datos desde el JSON externo
-d3.json("grafo.json").then(data => {
+d3.json("data/grafo.json").then(data => {
   const nodes = data.nodes;
   const links = data.links;
 
