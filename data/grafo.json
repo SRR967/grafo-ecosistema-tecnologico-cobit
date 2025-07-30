@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    { "id": "Inicio", "info": "Este es el nodo principal del grafo.", "img": "https://via.placeholder.com/250x150?text=Inicio" },
+    { "id": "Nodo A", "info": "Información Nodo A", "img": "https://via.placeholder.com/250x150?text=Nodo+A" },
+    { "id": "Nodo B", "info": "Detalles del Nodo B. Puede estar conectado a C.", "img": "https://via.placeholder.com/250x150?text=Nodo+B" },
+    { "id": "Nodo C", "info": "Nodo C: fin de esta pequeña demo.", "img": "https://via.placeholder.com/250x150?text=Nodo+C" }
+  ],
+  "links": [
+    { "source": "Inicio", "target": "Nodo A" },
+    { "source": "Inicio", "target": "Nodo B" },
+    { "source": "Nodo B", "target": "Nodo C" }
+  ]
+}
