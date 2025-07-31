@@ -80,17 +80,18 @@ d3.json("data/grafo.json").then(data => {
   // Mostrar información en el panel lateral
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
-      // Nodo de objetivo COBIT
       infoPanel.innerHTML = `
-        <h2>${d.id} - ${d.nombre}</h2>
-        ${d.img ? `<img src="${d.img}" alt="${d.nombre}">` : ""}
-        <p><strong>Descripción:</strong> ${d.descripcion}</p>
-        <h3>Herramientas asociadas:</h3>
-        <ul>
-          ${d.herramientas ? d.herramientas.map(h => `<li>${h}</li>`).join("") : "<li>No definidas</li>"}
-        </ul>
-      `;
-    } else if (d.tipo === "herramienta") {
+    <h2>${d.id} - ${d.nombre}</h2>
+    <p><strong>Descripción:</strong> ${d.descripcion}</p>
+    <p><strong>Propósito:</strong> ${d.proposito || "No especificado"}</p>
+    <h3>Herramientas asociadas:</h3>
+    <ul>
+      ${d.herramientas ? d.herramientas.map(h => `<li>${h}</li>`).join("") : "<li>No definidas</li>"}
+    </ul>
+  `;
+    }
+
+    else if (d.tipo === "herramienta") {
       // Nodo de herramienta
       infoPanel.innerHTML = `
         <h2>${d.id}</h2>
