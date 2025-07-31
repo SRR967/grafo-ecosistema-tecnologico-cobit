@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Grafo Interactivo desde JSON</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
+
 <body>
+  <div id="controls">
+    <label for="objetivoSelect"><strong>Filtrar por Objetivos COBIT:</strong></label>
+    <select id="objetivoSelect" multiple>
+      <!-- Se llenará dinámicamente con D3 -->
+    </select>
+    <button id="resetBtn">Mostrar todos</button>
+  </div>
+  
+  <svg width="100%" height="100%"></svg>
+
   <svg></svg>
   <div id="infoPanel">
     <h2>Selecciona un nodo</h2>
@@ -14,4 +26,5 @@
   </div>
   <script src="js/script.js"></script>
 </body>
+
 </html>

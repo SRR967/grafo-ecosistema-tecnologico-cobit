@@ -42,3 +42,19 @@ text {
   border-radius: 8px;
   margin-bottom: 10px;
 }
+#controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(30, 30, 30, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: sans-serif;
+  z-index: 10;
+}
+
+#objetivoSelect {
+  width: 200px;
+  height: 100px;
+}
