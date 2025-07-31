@@ -1,13 +1,194 @@
 {
   "nodes": [
-    { "id": "Inicio", "info": "Este es el nodo principal del grafo.", "img": "https://via.placeholder.com/250x150?text=Inicio" },
-    { "id": "Nodo A", "info": "Información Nodo A", "img": "https://via.placeholder.com/250x150?text=Nodo+A" },
-    { "id": "Nodo B", "info": "Detalles del Nodo B. Puede estar conectado a C.", "img": "https://via.placeholder.com/250x150?text=Nodo+B" },
-    { "id": "Nodo C", "info": "Nodo C: fin de esta pequeña demo.", "img": "https://via.placeholder.com/250x150?text=Nodo+C" }
+    {
+      "id": "Apache Open",
+      "tipo": "herramienta",
+      "categoria": "Productividad",
+      "descripcion": "Una completa suite ofimática de código abierto que incluye procesador de textos, hojas de cálculo, presentaciones, diagramación y bases de datos. Está diseñada para ofrecer una alternativa libre a soluciones propietarias y permite trabajar con formatos estándar y abrir archivos de otras suites como Microsoft Office.",
+      "casos_uso": [
+        "Creación y edición de documentos corporativos",
+        "Presentaciones empresariales",
+        "Gestión de hojas de cálculo y reportes"
+      ]
+    },
+    {
+      "id": "Archi",
+      "tipo": "herramienta",
+      "categoria": "Arquitectura empresarial",
+      "descripcion": "Herramienta especializada en la creación de modelos de arquitectura empresarial utilizando el estándar ArchiMate. Permite visualizar relaciones entre procesos, aplicaciones, infraestructura y estrategias, ayudando a planificar la evolución de sistemas de TI y procesos de negocio.",
+      "casos_uso": [
+        "Diseño de arquitecturas empresariales",
+        "Documentación de procesos de TI",
+        "Planificación estratégica de sistemas"
+      ]
+    },
+    {
+      "id": "Open Source Risk Engine",
+      "tipo": "herramienta",
+      "categoria": "Finanzas / Cumplimiento",
+      "descripcion": "Plataforma open source diseñada para el modelado, simulación y análisis cuantitativo de riesgos financieros, de mercado y operacionales. Facilita la creación de escenarios y permite cumplir con regulaciones relacionadas con la gestión de riesgos.",
+      "casos_uso": [
+        "Gestión de riesgos financieros",
+        "Simulación de escenarios económicos",
+        "Cumplimiento de normativas regulatorias"
+      ]
+    },
+    {
+      "id": "Collabtive",
+      "tipo": "herramienta",
+      "categoria": "Colaboración",
+      "descripcion": "Sistema open source para la gestión de proyectos y tareas en equipo. Ofrece seguimiento de hitos, calendarios, gestión de usuarios y comunicación interna. Está orientado a pequeñas y medianas empresas que buscan una alternativa libre a herramientas comerciales de gestión de proyectos.",
+      "casos_uso": [
+        "Planificación de proyectos colaborativos",
+        "Asignación y seguimiento de tareas",
+        "Gestión de hitos y tiempos"
+      ]
+    },
+    {
+      "id": "MantisBT",
+      "tipo": "herramienta",
+      "categoria": "Gestión de incidencias",
+      "descripcion": "Herramienta para la gestión de errores (bug tracking) y seguimiento de incidencias. Permite gestionar proyectos de desarrollo, priorizar errores, asignar tareas y generar reportes detallados.",
+      "casos_uso": [
+        "Gestión de bugs en software",
+        "Seguimiento de incidencias de TI",
+        "Reportes de calidad en proyectos"
+      ]
+    },
+    {
+      "id": "Eramba",
+      "tipo": "herramienta",
+      "categoria": "Seguridad y cumplimiento",
+      "descripcion": "Solución integral de Gobernanza, Riesgo y Cumplimiento (GRC) diseñada para la gestión de políticas, auditorías, riesgos y controles de seguridad. Incluye módulos para evaluación de riesgos, gestión documental y planificación de auditorías.",
+      "casos_uso": [
+        "Gobernanza y gestión de riesgos",
+        "Cumplimiento de normativas internacionales",
+        "Planificación de auditorías internas"
+      ]
+    },
+    {
+      "id": "phpBB",
+      "tipo": "herramienta",
+      "categoria": "Comunicación / Comunidad",
+      "descripcion": "Plataforma de foros en línea open source utilizada para crear comunidades virtuales y sistemas de soporte. Ofrece herramientas de moderación, gestión de usuarios, mensajería y personalización de temas.",
+      "casos_uso": [
+        "Creación de comunidades en línea",
+        "Foros de soporte técnico",
+        "Comunicación interna corporativa"
+      ]
+    },
+    {
+      "id": "Zabbix",
+      "tipo": "herramienta",
+      "categoria": "Monitoreo",
+      "descripcion": "Solución open source para el monitoreo de redes, servidores y aplicaciones. Ofrece métricas en tiempo real, alertas, dashboards personalizables y capacidad de monitoreo distribuido.",
+      "casos_uso": [
+        "Monitoreo de infraestructuras TI",
+        "Alertas en tiempo real",
+        "Seguimiento de rendimiento de aplicaciones y servidores"
+      ]
+    },
+    {
+      "id": "Znuny/OTRS",
+      "tipo": "herramienta",
+      "categoria": "Helpdesk / Soporte",
+      "descripcion": "Sistema de gestión de tickets y soporte técnico. Znuny es la versión open source de OTRS, utilizada ampliamente en empresas para gestionar solicitudes, incidencias y flujos de trabajo de atención al cliente.",
+      "casos_uso": [
+        "Mesa de ayuda corporativa",
+        "Gestión de solicitudes internas",
+        "ITSM y soporte técnico"
+      ]
+    },
+    {
+      "id": "JFire",
+      "tipo": "herramienta",
+      "categoria": "Negocios / ERP",
+      "descripcion": "Plataforma modular de ERP y CRM open source para empresas. Permite gestionar clientes, procesos de negocio, ventas, inventarios y finanzas. Es extensible y puede adaptarse a distintos sectores industriales.",
+      "casos_uso": [
+        "Gestión de clientes y ventas",
+        "Administración de inventarios",
+        "Automatización de procesos empresariales"
+      ]
+    },
+    {
+      "id": "Anaconda",
+      "tipo": "herramienta",
+      "categoria": "Ciencia de datos",
+      "descripcion": "Distribución de Python y R para ciencia de datos, machine learning y análisis avanzado. Incluye librerías populares como NumPy, pandas y TensorFlow, así como entornos interactivos como Jupyter Notebook.",
+      "casos_uso": [
+        "Análisis de datos masivos",
+        "Modelos de machine learning",
+        "Visualización y exploración de datos"
+      ]
+    },
+    {
+      "id": "GLPI",
+      "tipo": "herramienta",
+      "categoria": "Gestión de TI",
+      "descripcion": "Sistema de gestión de activos de TI, helpdesk y mantenimiento preventivo/correctivo. Permite gestionar inventarios de hardware y software, contratos, licencias y tickets de soporte.",
+      "casos_uso": [
+        "Inventario de activos TI",
+        "Mesa de ayuda corporativa",
+        "Gestión de contratos y licencias"
+      ]
+    },
+    {
+      "id": "Alfresco",
+      "tipo": "herramienta",
+      "categoria": "Gestión documental",
+      "descripcion": "Plataforma de gestión documental empresarial y colaboración que permite centralizar archivos, controlar versiones, flujos de aprobación y automatizar procesos relacionados con la gestión de la información.",
+      "casos_uso": [
+        "Repositorio documental corporativo",
+        "Automatización de flujos de trabajo",
+        "Colaboración en proyectos"
+      ]
+    },
+    {
+      "id": "Apache Dubbo",
+      "tipo": "herramienta",
+      "categoria": "Integración de servicios",
+      "descripcion": "Framework Java para llamadas a procedimientos remotos (RPC) y desarrollo de arquitecturas distribuidas basadas en microservicios. Ofrece balanceo de carga, descubrimiento de servicios y tolerancia a fallos.",
+      "casos_uso": [
+        "Implementación de microservicios",
+        "Integración de aplicaciones distribuidas",
+        "Comunicación entre sistemas"
+      ]
+    },
+    {
+      "id": "Issabel",
+      "tipo": "herramienta",
+      "categoria": "Telefonía VoIP",
+      "descripcion": "Plataforma de comunicaciones unificadas basada en Asterisk. Ofrece funciones de PBX, call center, grabación de llamadas, IVR y herramientas de integración VoIP.",
+      "casos_uso": [
+        "Central telefónica empresarial",
+        "Plataformas de call center",
+        "Comunicaciones VoIP integradas"
+      ]
+    },
+    {
+      "id": "Apache OFBiz",
+      "tipo": "herramienta",
+      "categoria": "Negocios / ERP",
+      "descripcion": "Framework open source para gestión empresarial que incluye ERP, CRM y e-commerce. Es modular y permite personalizar procesos internos y de comercio electrónico.",
+      "casos_uso": [
+        "Gestión de procesos empresariales",
+        "Implementación de CRM",
+        "Plataformas de e-commerce"
+      ]
+    },
+    {
+      "id": "Moodle",
+      "tipo": "herramienta",
+      "categoria": "Educación",
+      "descripcion": "Plataforma de aprendizaje online open source utilizada por instituciones educativas y empresas para capacitación interna. Ofrece cursos, evaluaciones, foros y reportes de progreso.",
+      "casos_uso": [
+        "Cursos de educación virtual",
+        "Capacitación interna corporativa",
+        "Programas de e-learning"
+      ]
+    }
   ],
   "links": [
-    { "source": "Inicio", "target": "Nodo A" },
-    { "source": "Inicio", "target": "Nodo B" },
-    { "source": "Nodo B", "target": "Nodo C" }
+    
   ]
 }

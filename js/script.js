@@ -3,11 +3,12 @@ const infoPanel = document.getElementById("infoPanel");
 const width = window.innerWidth - 300;
 const height = window.innerHeight;
 
-// 🔥 Cargar datos desde el JSON externo
+// Cargar datos desde JSON en /data
 d3.json("data/grafo.json").then(data => {
   const nodes = data.nodes;
   const links = data.links;
 
+  // Crear simulación de D3
   const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id).distance(150))
     .force("charge", d3.forceManyBody().strength(-300))
@@ -27,7 +28,7 @@ d3.json("data/grafo.json").then(data => {
     .data(nodes)
     .enter().append("circle")
     .attr("r", 15)
-    .attr("fill", "steelblue")
+    .attr("fill", d => d.tipo === "objetivo" ? "#4da6ff" : "#00c853") // Azul para objetivos, verde para herramientas
     .call(drag(simulation))
     .on("click", (event, d) => mostrarInfo(d));
 
@@ -78,10 +79,30 @@ d3.json("data/grafo.json").then(data => {
 
   // Mostrar información en el panel lateral
   function mostrarInfo(d) {
-    infoPanel.innerHTML = `
-      <h2>${d.id}</h2>
-      <img src="${d.img}" alt="${d.id}">
-      <p>${d.info}</p>
-    `;
+    if (d.tipo === "objetivo") {
+      // Nodo de objetivo COBIT
+      infoPanel.innerHTML = `
+        <h2>${d.id} - ${d.nombre}</h2>
+        ${d.img ? `<img src="${d.img}" alt="${d.nombre}">` : ""}
+        <p><strong>Descripción:</strong> ${d.descripcion}</p>
+        <h3>Herramientas asociadas:</h3>
+        <ul>
+          ${d.herramientas ? d.herramientas.map(h => `<li>${h}</li>`).join("") : "<li>No definidas</li>"}
+        </ul>
+      `;
+    } else if (d.tipo === "herramienta") {
+      // Nodo de herramienta
+      infoPanel.innerHTML = `
+        <h2>${d.id}</h2>
+        ${d.img ? `<img src="${d.img}" alt="${d.id}">` : ""}
+        <p><strong>Categoría:</strong> ${d.categoria}</p>
+        <p>${d.descripcion}</p>
+        <h3>Casos de uso:</h3>
+        <ul>
+          ${d.casos_uso ? d.casos_uso.map(c => `<li>${c}</li>`).join("") : "<li>No especificados</li>"}
+        </ul>
+        ${d.enlace ? `<p><a href="${d.enlace}" target="_blank">🔗 Sitio oficial</a></p>` : ""}
+      `;
+    }
   }
 });
