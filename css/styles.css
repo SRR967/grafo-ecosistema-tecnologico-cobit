@@ -60,9 +60,10 @@ main {
   width: 100%;
 }
 
+/* Selector con ajuste de texto */
 #objetivoSelect {
   width: 100%;
-  height: 150px;
+  height: 200px;
   border: 1px solid #444;
   border-radius: 6px;
   background: #2a2a2a;
@@ -70,14 +71,26 @@ main {
   font-size: 14px;
   padding: 8px;
   outline: none;
+  white-space: normal; /* Permite salto de línea */
+  line-height: 1.4;
 }
 
+#objetivoSelect option {
+  white-space: normal;
+  word-wrap: break-word;
+  padding: 4px 6px;
+}
+
+/* Tags seleccionados */
 #selected-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 10px;
-  justify-content: center;
+  justify-content: flex-start;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .tag {
@@ -160,22 +173,44 @@ text {
   font-size: 12px;
   pointer-events: none;
 }
-#objetivoSelect {
-  width: 100%;
-  height: 200px;
-  border: 1px solid #444;
-  border-radius: 6px;
-  background: #2a2a2a;
-  color: white;
-  font-size: 14px;
-  padding: 8px;
-  outline: none;
-  white-space: normal; /* 🔑 Permite salto de línea */
-  line-height: 1.4; /* Mejora la separación entre líneas */
+
+/* Scrollbar estilizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-#objetivoSelect option {
-  white-space: normal;  /* 🔑 Texto en varias líneas */
-  word-wrap: break-word; /* Ajusta texto largo dentro del ancho */
-  padding: 4px 6px;
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4da6ff;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3399ff;
+}
+
+/* Scroll específico para los tags */
+#selected-tags::-webkit-scrollbar {
+  width: 6px;
+}
+
+#selected-tags::-webkit-scrollbar-thumb {
+  background: #4da6ff;
+  border-radius: 6px;
+}
+
+/* Scroll específico para el panel de información */
+#infoPanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+#infoPanel::-webkit-scrollbar-thumb {
+  background: #4da6ff;
+  border-radius: 8px;
 }
