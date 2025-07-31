@@ -3,7 +3,17 @@ const infoPanel = document.getElementById("infoPanel");
 const width = window.innerWidth - 300;
 const height = window.innerHeight;
 
-// Cargar datos desde JSON en /data
+// Crear un grupo contenedor para aplicar zoom/pan
+const container = svg.append("g");
+
+// Habilitar zoom y pan
+svg.call(d3.zoom()
+  .scaleExtent([0.1, 3]) // Nivel de zoom permitido (mínimo, máximo)
+  .on("zoom", (event) => {
+    container.attr("transform", event.transform); // Aplicar zoom y pan al contenedor
+  })
+);
+
 d3.json("data/grafo.json").then(data => {
   const nodes = data.nodes;
   const links = data.links;
@@ -14,26 +24,26 @@ d3.json("data/grafo.json").then(data => {
     .force("charge", d3.forceManyBody().strength(-300))
     .force("center", d3.forceCenter(width / 2, height / 2));
 
-  // Dibujar enlaces
-  const link = svg.append("g")
+  // Dibujar enlaces dentro del contenedor
+  const link = container.append("g")
     .attr("stroke", "#aaa")
     .selectAll("line")
     .data(links)
     .enter().append("line")
     .attr("stroke-width", 2);
 
-  // Dibujar nodos
-  const node = svg.append("g")
+  // Dibujar nodos dentro del contenedor
+  const node = container.append("g")
     .selectAll("circle")
     .data(nodes)
     .enter().append("circle")
     .attr("r", 15)
-    .attr("fill", d => d.tipo === "objetivo" ? "#4da6ff" : "#00c853") // Azul para objetivos, verde para herramientas
+    .attr("fill", d => d.tipo === "objetivo" ? "#4da6ff" : "#00c853")
     .call(drag(simulation))
     .on("click", (event, d) => mostrarInfo(d));
 
-  // Etiquetas de nodos
-  const label = svg.append("g")
+  // Etiquetas de nodos dentro del contenedor
+  const label = container.append("g")
     .selectAll("text")
     .data(nodes)
     .enter().append("text")
@@ -81,18 +91,15 @@ d3.json("data/grafo.json").then(data => {
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
       infoPanel.innerHTML = `
-    <h2>${d.id} - ${d.nombre}</h2>
-    <p><strong>Descripción:</strong> ${d.descripcion}</p>
-    <p><strong>Propósito:</strong> ${d.proposito || "No especificado"}</p>
-    <h3>Herramientas asociadas:</h3>
-    <ul>
-      ${d.herramientas ? d.herramientas.map(h => `<li>${h}</li>`).join("") : "<li>No definidas</li>"}
-    </ul>
-  `;
-    }
-
-    else if (d.tipo === "herramienta") {
-      // Nodo de herramienta
+        <h2>${d.id} - ${d.nombre}</h2>
+        <p><strong>Descripción:</strong> ${d.descripcion}</p>
+        <p><strong>Propósito:</strong> ${d.proposito || "No especificado"}</p>
+        <h3>Herramientas asociadas:</h3>
+        <ul>
+          ${d.herramientas ? d.herramientas.map(h => `<li>${h}</li>`).join("") : "<li>No definidas</li>"}
+        </ul>
+      `;
+    } else if (d.tipo === "herramienta") {
       infoPanel.innerHTML = `
         <h2>${d.id}</h2>
         ${d.img ? `<img src="${d.img}" alt="${d.id}">` : ""}
