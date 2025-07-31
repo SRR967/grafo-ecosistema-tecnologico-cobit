@@ -1,0 +1,1748 @@
+[
+    {
+        "objetivo": "APO01",
+        "nombre": "Marco de gestión de I&T gestionado",
+        "practicas": [
+            {
+                "id": "APO01.01",
+                "nombre": "Diseñar el sistema de gestión de I&T empresarial.",
+                "actividades": [
+                    {
+                        "id": "APO01.01-A01",
+                        "descripcion": "Obtener una comprensión de la visión, dirección y estrategia de la empresa, así como del contexto y los desafíos actuales de la misma.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.01-A02",
+                        "descripcion": "Considere el entorno interno de la empresa, incluida la cultura y la filosofía de gestión, la tolerancia al riesgo, la política de seguridad y privacidad, los valores éticos, el código de conducta, la responsabilidad y los requisitos de integridad de la gestión.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.01-A03",
+                        "descripcion": "Aplicar la cascada de objetivos de COBIT y los factores de diseño a la estrategia y el contexto empresarial para decidir las prioridades para el sistema de gestión y, por tanto, para la implementación de las prioridades de los objetivos de gestión.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.01-A04",
+                        "descripcion": "Validar las prioridades seleccionadas para la implementación de los objetivos de gestión con buenas prácticas o requisitos específicos de la industria (por ejemplo, regulaciones específicas de la industria) y con estructuras de gobernanza apropiadas.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.02",
+                "nombre": "Comunicar los objetivos de gestión, la dirección y las decisiones tomadas.",
+                "actividades": [
+                    {
+                        "id": "APO01.02-A01",
+                        "descripcion": "Proporcionar recursos suficientes y capacitados para apoyar el proceso de comunicación.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO01.02-A02",
+                        "descripcion": "Definir reglas básicas para la comunicación identificando las necesidades de comunicación e implementando planes basados en esas necesidades.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO01.02-A03",
+                        "descripcion": "Comunicar continuamente los objetivos y la dirección de I&T con respaldo de la dirección ejecutiva utilizando todos los canales disponibles.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO01.02-A04",
+                        "descripcion": "Asegúrese de que la información comunicada abarque misión, objetivos del servicio, políticas, controles internos y roles con el nivel adecuado de detalle.",
+                        "herramienta": "OTRS/Znuny"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.03",
+                "nombre": "Implementar procesos de gestión (para apoyar el logro de los objetivos de gobernanza y gestión).",
+                "actividades": [
+                    {
+                        "id": "APO01.03-A01",
+                        "descripcion": "Desarrollar el modelo de proceso objetivo de gobernanza de I&T específico para la organización basado en objetivos prioritarios.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.03-A02",
+                        "descripcion": "Analizar la brecha entre el modelo objetivo y las prácticas actuales.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.03-A03",
+                        "descripcion": "Elaborar hoja de ruta para implementar prácticas y actividades faltantes, usando métricas para seguimiento.",
+                        "herramienta": "Apache Open"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.04",
+                "nombre": "Definir e implementar las estructuras organizacionales.",
+                "actividades": [
+                    {
+                        "id": "APO01.04-A01",
+                        "descripcion": "Definir alcance de funciones internas/externas, roles y derechos de decisión necesarios.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.04-A02",
+                        "descripcion": "Alinear la organización de I&T con modelos de arquitectura empresarial.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.04-A03",
+                        "descripcion": "Establecer comité directivo de I&T para seguimiento de proyectos y recursos.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO01.04-A04",
+                        "descripcion": "Proporcionar directrices para cada estructura de gestión incluyendo reuniones, seguimiento y resultados.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO01.04-A05",
+                        "descripcion": "Verificar periódicamente la adecuación y eficacia de las estructuras organizativas.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.05",
+                "nombre": "Establecer roles y responsabilidades.",
+                "actividades": [
+                    {
+                        "id": "APO01.05-A01",
+                        "descripcion": "Establecer y comunicar funciones y responsabilidades alineadas con necesidades y objetivos del negocio.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.05-A02",
+                        "descripcion": "Considerar requisitos de continuidad del servicio al definir roles, incluyendo respaldos y capacitación cruzada.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.05-A03",
+                        "descripcion": "Mantener actualizada la información de contacto y roles para continuidad del servicio de I&T.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.05-A04",
+                        "descripcion": "Incluir cumplimiento de políticas y código de ética en descripciones de funciones.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.05-A05",
+                        "descripcion": "Definir rendición de cuentas mediante roles y responsabilidades claras.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.05-A06",
+                        "descripcion": "Estructurar roles y responsabilidades para evitar comprometer procesos críticos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.05-A07",
+                        "descripcion": "Implementar supervisión para garantizar funciones correctas y evaluar desempeño del personal.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.06",
+                "nombre": "Optimizar la colocación de la función TI.",
+                "actividades": [
+                    {
+                        "id": "APO01.06-A01",
+                        "descripcion": "Comprender el contexto para ubicación de TI considerando estrategia y modelo operativo.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.06-A02",
+                        "descripcion": "Evaluar y priorizar opciones de ubicación, abastecimiento y modelos operativos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.06-A03",
+                        "descripcion": "Definir y acordar ubicación de la función de TI.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.07",
+                "nombre": "Definir la información (datos) y la propiedad del sistema.",
+                "actividades": [
+                    {
+                        "id": "APO01.07-A01",
+                        "descripcion": "Establecer directrices para clasificación coherente de información en la empresa.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.07-A02",
+                        "descripcion": "Mantener inventario de información con propietarios, custodios y clasificaciones.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.07-A03",
+                        "descripcion": "Distinguir entre datos e información crítica y garantizar su protección adecuada.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.08",
+                "nombre": "Definir las habilidades y competencias objetivo.",
+                "actividades": [
+                    {
+                        "id": "APO01.08-A01",
+                        "descripcion": "Identificar habilidades necesarias para alcanzar los objetivos de gestión seleccionados.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.08-A02",
+                        "descripcion": "Analizar brecha entre competencias actuales y objetivo; consultar APO07 para desarrollo.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.09",
+                "nombre": "Definir y comunicar políticas y procedimientos.",
+                "actividades": [
+                    {
+                        "id": "APO01.09-A01",
+                        "descripcion": "Crear políticas de TI sobre calidad, seguridad, privacidad, controles internos y ética.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.09-A02",
+                        "descripcion": "Implementar y hacer cumplir políticas de I&T integradas en operaciones.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.09-A03",
+                        "descripcion": "Evaluar y actualizar políticas anualmente para adaptarse a cambios en entorno empresarial.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.10",
+                "nombre": "Definir e implementar infraestructura, servicios y aplicaciones.",
+                "actividades": [
+                    {
+                        "id": "APO01.10-A01",
+                        "descripcion": "Identificar objetivos que pueden lograrse mediante automatización de servicios o infraestructura.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.10-A02",
+                        "descripcion": "Seleccionar e implementar herramientas adecuadas y comunicarlas a partes interesadas.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.10-A03",
+                        "descripcion": "Proporcionar capacitación sobre herramientas seleccionadas según necesidad.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO01.11",
+                "nombre": "Gestionar la mejora continua del sistema de gestión de I&T.",
+                "actividades": [
+                    {
+                        "id": "APO01.11-A01",
+                        "descripcion": "Evaluar periódicamente el rendimiento del marco y tomar medidas correctivas.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.11-A02",
+                        "descripcion": "Identificar procesos críticos, evaluar riesgos y definir objetivos de mejora.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.11-A03",
+                        "descripcion": "Priorizar e implementar mejoras basadas en beneficios y costos.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.11-A04",
+                        "descripcion": "Mejorar eficiencia mediante capacitación, documentación o automatización.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO01.11-A05",
+                        "descripcion": "Aplicar prácticas de gestión de calidad para actualizar procesos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO01.11-A06",
+                        "descripcion": "Retirar componentes obsoletos del sistema de gobernanza.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO02",
+        "nombre": "Estrategia gestionada",
+        "practicas": [
+            {
+                "id": "APO02.01",
+                "nombre": "Habilitar el cambio en todos los diferentes aspectos de la organización.",
+                "actividades": [
+                    {
+                        "id": "APO02.01-A01",
+                        "descripcion": "Desarrollar y mantener una comprensión del entorno externo de la empresa.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.01-A02",
+                        "descripcion": "Desarrollar y mantener una comprensión de la forma actual de trabajar, incluido el entorno operativo, la arquitectura empresarial, la cultura empresarial y los desafíos actuales.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.01-A03",
+                        "descripcion": "Desarrollar y mantener una comprensión de la dirección futura de la empresa, incluyendo la estrategia, las metas y los objetivos empresariales.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.01-A04",
+                        "descripcion": "Identificar a las partes interesadas clave y obtener información sobre sus requisitos.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO02.02",
+                "nombre": "Evaluar las capacidades actuales, el rendimiento y la madurez digital de la empresa.",
+                "actividades": [
+                    {
+                        "id": "APO02.02-A01",
+                        "descripcion": "Desarrollar una línea base de las capacidades y servicios empresariales y de I&T actuales, incluyendo evaluación de servicios externos, gobernanza y habilidades relacionadas.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO02.02-A02",
+                        "descripcion": "Evaluar la madurez digital en dimensiones como liderazgo tecnológico, riesgo aceptado, innovación y cultura organizativa.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO02.03",
+                "nombre": "Definir las capacidades digitales objetivo.",
+                "actividades": [
+                    {
+                        "id": "APO02.03-A01",
+                        "descripcion": "Resumir el contexto empresarial e identificar aspectos de I&T de la estrategia, incluyendo digitalización y nuevos modelos de negocio.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.03-A02",
+                        "descripcion": "Definir objetivos y metas de I&T de alto nivel y especificar su contribución a los objetivos de la empresa.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.03-A03",
+                        "descripcion": "Detallar servicios y productos de I&T necesarios considerando tecnologías emergentes y estándares de referencia.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.03-A04",
+                        "descripcion": "Determinar metodologías y enfoques necesarios, como Agile o Scrum, para implementar la cartera de I&T.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO02.04",
+                "nombre": "Realizar un análisis de brechas.",
+                "actividades": [
+                    {
+                        "id": "APO02.04-A01",
+                        "descripcion": "Identificar todas las brechas y cambios necesarios para alcanzar el entorno objetivo.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.04-A02",
+                        "descripcion": "Describir cambios de alto nivel en la arquitectura empresarial.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.04-A03",
+                        "descripcion": "Evaluar impacto de cambios en modelos operativos de negocio y TI.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.04-A04",
+                        "descripcion": "Evaluar el valor y las implicaciones de los cambios potenciales en capacidades y servicios de I&T.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.04-A05",
+                        "descripcion": "Refinar la definición del entorno objetivo y documentar beneficios esperados.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO02.05",
+                "nombre": "Definir el plan estratégico y la hoja de ruta.",
+                "actividades": [
+                    {
+                        "id": "APO02.05-A01",
+                        "descripcion": "Definir iniciativas necesarias para cerrar brechas e integrarlas en la estrategia de I&T.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A02",
+                        "descripcion": "Crear una hoja de ruta detallando pasos incrementales, capacitación y adopción de nuevas tecnologías.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A03",
+                        "descripcion": "Considerar el ecosistema externo como socios y proveedores para apoyar la ejecución.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A04",
+                        "descripcion": "Agrupar acciones en programas y proyectos con objetivos y recursos definidos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A05",
+                        "descripcion": "Determinar dependencias y priorizar proyectos según impacto y sinergias.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A06",
+                        "descripcion": "Finalizar hoja de ruta incluyendo cronograma e interdependencias.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A07",
+                        "descripcion": "Asignar un líder de transformación digital para supervisar la alineación negocio-TI.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A08",
+                        "descripcion": "Obtener aprobación formal de partes interesadas para el plan.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.05-A09",
+                        "descripcion": "Traducir objetivos en métricas y metas vinculadas a beneficios empresariales.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO02.06",
+                "nombre": "Comunicar la estrategia y dirección de I&T.",
+                "actividades": [
+                    {
+                        "id": "APO02.06-A01",
+                        "descripcion": "Desarrollar plan de comunicación con mensajes, públicos y canales adecuados.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.06-A02",
+                        "descripcion": "Preparar paquetes de comunicación efectivos con tecnologías disponibles.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.06-A03",
+                        "descripcion": "Mantener una red de apoyo que impulse la estrategia de I&T.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO02.06-A04",
+                        "descripcion": "Recibir retroalimentación y ajustar el plan de comunicación según necesidades.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO03",
+        "nombre": "Arquitectura empresarial gestionada",
+        "practicas": [
+            {
+                "id": "APO03.01",
+                "nombre": "Desarrollar la visión de la arquitectura empresarial.",
+                "actividades": [
+                    {
+                        "id": "APO03.01-A01",
+                        "descripcion": "Identificar a las partes interesadas clave y sus inquietudes/objetivos, definiendo los requisitos empresariales clave y las perspectivas de arquitectura necesarias.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO03.01-A02",
+                        "descripcion": "Identificar objetivos empresariales y los impulsores estratégicos, definiendo las limitaciones a nivel empresarial y de proyectos.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO03.01-A03",
+                        "descripcion": "Alinear los objetivos de la arquitectura con las prioridades estratégicas del programa.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.01-A04",
+                        "descripcion": "Comprender las capacidades y objetivos de la empresa, identificando opciones para alcanzarlos.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO03.01-A05",
+                        "descripcion": "Evaluar la preparación de la empresa para el cambio.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.01-A06",
+                        "descripcion": "Definir el alcance de la arquitectura base y objetivo, incluyendo elementos dentro y fuera del alcance.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.01-A07",
+                        "descripcion": "Comprender metas y objetivos estratégicos empresariales y garantizar que las oportunidades de arquitectura se integren en la planificación estratégica.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.01-A08",
+                        "descripcion": "Crear la visión de la arquitectura basándose en las preocupaciones de las partes interesadas y requisitos de capacidad.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO03.01-A09",
+                        "descripcion": "Confirmar y desarrollar principios de arquitectura, asegurando que las definiciones estén actualizadas y claras.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO03.01-A10",
+                        "descripcion": "Identificar riesgos de cambio empresarial asociados con la arquitectura y desarrollar estrategias de mitigación.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.01-A11",
+                        "descripcion": "Desarrollar caso de negocio conceptual de arquitectura y planes, obteniendo aprobación alineada con la estrategia empresarial.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.01-A12",
+                        "descripcion": "Definir propuestas de valor, objetivos y métricas de la arquitectura objetivo.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO03.02",
+                "nombre": "Definir arquitectura de referencia.",
+                "actividades": [
+                    {
+                        "id": "APO03.02-A01",
+                        "descripcion": "Mantener repositorio de arquitectura con estándares, componentes y vistas para uniformidad organizacional.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A02",
+                        "descripcion": "Seleccionar puntos de vista de referencia que aborden las inquietudes de las partes interesadas.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A03",
+                        "descripcion": "Seleccionar modelos para perspectivas específicas usando herramientas y nivel de descomposición adecuados.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A04",
+                        "descripcion": "Desarrollar descripciones de dominios arquitectónicos de referencia identificando bloques de construcción relevantes.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A05",
+                        "descripcion": "Mantener modelo de arquitectura de procesos estandarizado y definir funciones y responsabilidades.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A06",
+                        "descripcion": "Mantener modelo de arquitectura de información coherente con estrategia empresarial para optimizar uso de datos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A07",
+                        "descripcion": "Verificar consistencia interna, analizar brechas entre línea base y objetivo, y resolver conflictos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A08",
+                        "descripcion": "Realizar revisión formal de arquitectura con partes interesadas.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.02-A09",
+                        "descripcion": "Finalizar arquitecturas de negocio, información, datos, aplicaciones y tecnología, y documentarlas.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO03.03",
+                "nombre": "Seleccionar oportunidades y soluciones.",
+                "actividades": [
+                    {
+                        "id": "APO03.03-A01",
+                        "descripcion": "Determinar atributos clave del cambio empresarial, considerando cultura e impacto en la implementación.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A02",
+                        "descripcion": "Identificar factores empresariales que limitan la secuencia de implementación y revisar planes estratégicos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A03",
+                        "descripcion": "Analizar brechas entre arquitecturas de referencia y objetivo y evaluar soluciones.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A04",
+                        "descripcion": "Evaluar requisitos y definir conjunto mínimo de requisitos funcionales para una implementación eficiente.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A05",
+                        "descripcion": "Conciliar requisitos consolidados con soluciones potenciales.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A06",
+                        "descripcion": "Refinar dependencias iniciales e identificar limitaciones en planes de implementación.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A07",
+                        "descripcion": "Confirmar preparación de la empresa para la transformación y evaluar riesgos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A08",
+                        "descripcion": "Formular estrategia general de implementación y migración alineada con objetivos y plazos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A09",
+                        "descripcion": "Agrupar paquetes de trabajo en programas y proyectos coherentes.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.03-A10",
+                        "descripcion": "Desarrollar arquitecturas de transición para cambios incrementales.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO03.04",
+                "nombre": "Definir la implementación de la arquitectura.",
+                "actividades": [
+                    {
+                        "id": "APO03.04-A01",
+                        "descripcion": "Establecer elementos del plan de implementación y migración alineados con requisitos de decisión.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.04-A02",
+                        "descripcion": "Confirmar incrementos y fases de la arquitectura de transición.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.04-A03",
+                        "descripcion": "Definir plan de implementación y migración integrándolo en planificación de programas y proyectos.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.04-A04",
+                        "descripcion": "Comunicar hoja de ruta arquitectónica a partes interesadas relevantes.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            },
+            {
+                "id": "APO03.05",
+                "nombre": "Proporcionar servicios de arquitectura empresarial.",
+                "actividades": [
+                    {
+                        "id": "APO03.05-A01",
+                        "descripcion": "Confirmar alcance y prioridades, brindando orientación para desarrollo e implementación de soluciones.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.05-A02",
+                        "descripcion": "Gestionar requisitos de arquitectura empresarial y apoyar con asesoría y experiencia técnica.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.05-A03",
+                        "descripcion": "Gestionar cartera de servicios de arquitectura alineada con objetivos estratégicos y soluciones.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.05-A04",
+                        "descripcion": "Definir prioridades de arquitectura, recopilar métricas de valor y comunicar resultados.",
+                        "herramienta": "Archi"
+                    },
+                    {
+                        "id": "APO03.05-A05",
+                        "descripcion": "Establecer foro tecnológico para guiar proyectos, medir cumplimiento de normas y relevancia del negocio.",
+                        "herramienta": "Archi"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO04",
+        "nombre": "Innovación gestionada",
+        "practicas": [
+            {
+                "id": "APO04.01",
+                "nombre": "Crear un entorno propicio para la innovación.",
+                "actividades": [
+                    {
+                        "id": "APO04.01-A01",
+                        "descripcion": "Crear un plan de innovación que incluya el apetito por el riesgo, un presupuesto propuesto para iniciativas de innovación y objetivos de innovación.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO04.01-A02",
+                        "descripcion": "Proporcionar infraestructura que pueda ser un componente de gobernanza para la innovación, como herramientas de colaboración para mejorar el trabajo entre ubicaciones geográficas o divisiones.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO04.01-A03",
+                        "descripcion": "Mantener un programa que permita al personal presentar ideas de innovación y crear una estructura de toma de decisiones adecuada para evaluarlas y hacerlas avanzar.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO04.01-A04",
+                        "descripcion": "Fomentar ideas de innovación provenientes de clientes, proveedores y socios comerciales.",
+                        "herramienta": "Collabtive"
+                    }
+                ]
+            },
+            {
+                "id": "APO04.02",
+                "nombre": "Mantener una comprensión del entorno empresarial.",
+                "actividades": [
+                    {
+                        "id": "APO04.02-A01",
+                        "descripcion": "Mantener un conocimiento profundo de los impulsores de la industria, estrategia empresarial y de I&T, así como operaciones y desafíos actuales, para identificar tecnologías de valor añadido.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.02-A02",
+                        "descripcion": "Realizar reuniones periódicas con unidades de negocio y partes interesadas para comprender problemas, cuellos de botella y oportunidades de innovación tecnológica.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.02-A03",
+                        "descripcion": "Comprender parámetros de inversión empresarial en innovación y nuevas tecnologías para desarrollar estrategias adecuadas.",
+                        "herramienta": "Apache Open"
+                    }
+                ]
+            },
+            {
+                "id": "APO04.03",
+                "nombre": "Monitorear y escanear el entorno tecnológico.",
+                "actividades": [
+                    {
+                        "id": "APO04.03-A01",
+                        "descripcion": "Comprender interés y potencial empresarial en innovación tecnológica y centrarse en las más relevantes.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.03-A02",
+                        "descripcion": "Establecer vigilancia tecnológica, analizar entornos externos e identificar tecnologías emergentes de valor potencial.",
+                        "herramienta": "Apache Open"
+                    },
+                    {
+                        "id": "APO04.03-A03",
+                        "descripcion": "Consultar expertos externos para validar investigaciones o aportar información sobre tecnologías emergentes.",
+                        "herramienta": "Apache Open"
+                    },
+                    {
+                        "id": "APO04.03-A04",
+                        "descripcion": "Capturar ideas de innovación de personal de TI y evaluarlas para posible implementación.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO04.04",
+                "nombre": "Evaluar el potencial de las tecnologías emergentes y las ideas innovadoras.",
+                "actividades": [
+                    {
+                        "id": "APO04.04-A01",
+                        "descripcion": "Evaluar tecnologías identificadas según madurez, riesgos, adecuación a la arquitectura y valor potencial.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.04-A02",
+                        "descripcion": "Identificar problemas a validar mediante pruebas de concepto.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.04-A03",
+                        "descripcion": "Determinar alcance de pruebas de concepto, resultados deseados, presupuesto, plazos y responsabilidades.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.04-A04",
+                        "descripcion": "Obtener aprobación para la iniciativa de prueba de concepto.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.04-A05",
+                        "descripcion": "Realizar pruebas de concepto, evaluar viabilidad y potencial ROI.",
+                        "herramienta": "Apache Dubbo"
+                    }
+                ]
+            },
+            {
+                "id": "APO04.05",
+                "nombre": "Recomendar otras iniciativas apropiadas.",
+                "actividades": [
+                    {
+                        "id": "APO04.05-A01",
+                        "descripcion": "Documentar resultados de pruebas de concepto y recomendaciones sobre tendencias y programas de innovación.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.05-A02",
+                        "descripcion": "Comunicar oportunidades viables en la estrategia de I&T y arquitectura empresarial.",
+                        "herramienta": "NA"
+                    },
+                    {
+                        "id": "APO04.05-A03",
+                        "descripcion": "Analizar y comunicar razones de rechazo de iniciativas de prueba de concepto.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.05-A04",
+                        "descripcion": "Dar seguimiento y medir inversiones reales de las pruebas de concepto aprobadas.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO04.06",
+                "nombre": "Monitorear la implementación y utilización de la innovación.",
+                "actividades": [
+                    {
+                        "id": "APO04.06-A01",
+                        "descripcion": "Capturar lecciones aprendidas y oportunidades de mejora.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO04.06-A02",
+                        "descripcion": "Asegurar alineación de iniciativas de innovación con estrategia empresarial e I&T.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO04.06-A03",
+                        "descripcion": "Evaluar tecnologías e innovaciones implementadas y su nivel de adopción.",
+                        "herramienta": "Issabel"
+                    },
+                    {
+                        "id": "APO04.06-A04",
+                        "descripcion": "Identificar y evaluar valor potencial de innovaciones implementadas.",
+                        "herramienta": "Apache Open"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO05",
+        "nombre": "Cartera gestionada",
+        "practicas": [
+            {
+                "id": "APO05.01",
+                "nombre": "Determinar la disponibilidad y fuentes de fondos.",
+                "actividades": [
+                    {
+                        "id": "APO05.01-A01",
+                        "descripcion": "Comprender disponibilidad de fondos, gasto aprobado y gasto real hasta la fecha.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.01-A02",
+                        "descripcion": "Identificar opciones de financiación interna y externa para inversiones habilitadas en I&T.",
+                        "herramienta": "Apache Open"
+                    },
+                    {
+                        "id": "APO05.01-A03",
+                        "descripcion": "Determinar implicaciones de fuentes de financiamiento sobre expectativas de ROI.",
+                        "herramienta": "Apache Open"
+                    }
+                ]
+            },
+            {
+                "id": "APO05.02",
+                "nombre": "Evaluar y seleccionar programas a financiar.",
+                "actividades": [
+                    {
+                        "id": "APO05.02-A01",
+                        "descripcion": "Identificar oportunidades de inversión, especificar resultados esperados, costos y riesgos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.02-A02",
+                        "descripcion": "Evaluar casos de negocio alineados con beneficios empresariales y disponibilidad de recursos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.02-A03",
+                        "descripcion": "Evaluar impacto de nuevos programas sobre la cartera de inversiones.",
+                        "herramienta": "Apache Open"
+                    },
+                    {
+                        "id": "APO05.02-A04",
+                        "descripcion": "Seleccionar programas para cartera activa o retenerlos para evaluación futura.",
+                        "herramienta": "Apache Open"
+                    },
+                    {
+                        "id": "APO05.02-A05",
+                        "descripcion": "Definir hitos y reservar financiamiento por fases en programas seleccionados.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.02-A06",
+                        "descripcion": "Comunicar información de costos, beneficios y riesgos para priorización presupuestaria.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO05.03",
+                "nombre": "Monitorear, optimizar e informar sobre el rendimiento de la cartera.",
+                "actividades": [
+                    {
+                        "id": "APO05.03-A01",
+                        "descripcion": "Revisar cartera para sinergias, eliminar duplicación e identificar riesgos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.03-A02",
+                        "descripcion": "Reevaluar cartera ante cambios para mantener alineación estratégica.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.03-A03",
+                        "descripcion": "Ajustar objetivos y presupuestos reflejando gastos y beneficios reales.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.03-A04",
+                        "descripcion": "Desarrollar métricas de valor de I&T usando orientación de expertos.",
+                        "herramienta": "Zabbix"
+                    },
+                    {
+                        "id": "APO05.03-A05",
+                        "descripcion": "Proporcionar visión clara del rendimiento de la cartera a las partes interesadas.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.03-A06",
+                        "descripcion": "Generar informes ejecutivos sobre progreso de objetivos, gastos y logros.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.03-A07",
+                        "descripcion": "Incluir en seguimiento datos sobre objetivos alcanzados, mitigación de riesgos y resultados.",
+                        "herramienta": "Zabbix"
+                    },
+                    {
+                        "id": "APO05.03-A08",
+                        "descripcion": "Identificar desviaciones entre presupuesto, gasto real y ROI esperado.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO05.04",
+                "nombre": "Mantener carteras.",
+                "actividades": [
+                    {
+                        "id": "APO05.04-A01",
+                        "descripcion": "Crear y mantener carteras de programas, servicios y activos de I&T como base del presupuesto actual.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.04-A02",
+                        "descripcion": "Colaborar con responsables de servicios y operaciones para priorizar carteras de inversión.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.04-A03",
+                        "descripcion": "Retirar programas al cumplir objetivos o cuando no logren beneficios esperados.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO05.05",
+                "nombre": "Gestionar el logro de beneficios.",
+                "actividades": [
+                    {
+                        "id": "APO05.05-A01",
+                        "descripcion": "Dar seguimiento a beneficios, compararlos con métricas internas y comunicar resultados.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.05-A02",
+                        "descripcion": "Implementar medidas correctivas ante desviaciones significativas de beneficios esperados.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO05.05-A03",
+                        "descripcion": "Buscar orientación externa y datos de referencia para mejorar métricas y objetivos.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO06",
+        "nombre": "Presupuesto y costos administrados",
+        "practicas": [
+            {
+                "id": "APO06.01",
+                "nombre": "Gestionar finanzas y contabilidad",
+                "actividades": [
+                    {
+                        "id": "APO06.01-A01",
+                        "descripcion": "Definir procesos, entradas, salidas y responsabilidades para la gestión financiera de I&T y su análisis/reportes.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.01-A02",
+                        "descripcion": "Definir esquema de clasificación para elementos de costo relacionados con I&T (capex, opex, hardware, software, personal).",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.01-A03",
+                        "descripcion": "Usar información financiera para estudios de mercado sobre nuevas inversiones en activos y servicios de I&T.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.01-A04",
+                        "descripcion": "Mantener costos dentro de las carteras de activos y servicios de I&T.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO06.01-A05",
+                        "descripcion": "Establecer prácticas de planificación financiera y optimización de costos operativos recurrentes.",
+                        "herramienta": "Apache OFBiz"
+                    }
+                ]
+            },
+            {
+                "id": "APO06.02",
+                "nombre": "Priorizar la asignación de recursos",
+                "actividades": [
+                    {
+                        "id": "APO06.02-A01",
+                        "descripcion": "Clasificar iniciativas de I&T y solicitudes de presupuesto según análisis de negocio y prioridades estratégicas.",
+                        "herramienta": "JFire"
+                    },
+                    {
+                        "id": "APO06.02-A02",
+                        "descripcion": "Asignar recursos empresariales y de TI considerando opciones de compra, desarrollo o pago por uso.",
+                        "herramienta": "JFire"
+                    },
+                    {
+                        "id": "APO06.02-A03",
+                        "descripcion": "Establecer procedimiento para comunicar decisiones presupuestarias y revisarlas con responsables de unidades de negocio.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO06.02-A04",
+                        "descripcion": "Identificar y resolver impactos de decisiones presupuestarias en análisis de negocio y planes estratégicos.",
+                        "herramienta": "JFire"
+                    },
+                    {
+                        "id": "APO06.02-A05",
+                        "descripcion": "Obtener ratificación del comité ejecutivo sobre implicaciones presupuestarias críticas.",
+                        "herramienta": "Collabtive"
+                    }
+                ]
+            },
+            {
+                "id": "APO06.03",
+                "nombre": "Crear y mantener presupuestos",
+                "actividades": [
+                    {
+                        "id": "APO06.03-A01",
+                        "descripcion": "Implementar presupuesto formal de I&T incluyendo costos previstos de programas, servicios y activos.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.03-A02",
+                        "descripcion": "Considerar alineación con negocio, costos internos, externos y fuentes de financiamiento autorizadas.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.03-A03",
+                        "descripcion": "Documentar razones para contingencias presupuestarias y revisarlas periódicamente.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.03-A04",
+                        "descripcion": "Instruir a responsables de procesos y programas para planificar presupuestos.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO06.03-A05",
+                        "descripcion": "Revisar y ajustar presupuesto según necesidades cambiantes de la empresa.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.03-A06",
+                        "descripcion": "Registrar y comunicar presupuesto vigente de I&T incluyendo gastos comprometidos.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.03-A07",
+                        "descripcion": "Monitorear efectividad del presupuesto y aplicar mejoras futuras.",
+                        "herramienta": "Zabbix"
+                    }
+                ]
+            },
+            {
+                "id": "APO06.04",
+                "nombre": "Modelar y asignar costos",
+                "actividades": [
+                    {
+                        "id": "APO06.04-A01",
+                        "descripcion": "Definir modelo de asignación de costos justo, transparente y repetible (costeo basado en actividades).",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.04-A02",
+                        "descripcion": "Inspeccionar catálogos de servicios para identificar servicios sujetos a contracargos y compartidos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO06.04-A03",
+                        "descripcion": "Diseñar modelo de costos transparente para usuarios incluyendo factores de costo relevantes.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.04-A04",
+                        "descripcion": "Explicar principios y resultados del modelo a partes interesadas y obtener su opinión.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO06.04-A05",
+                        "descripcion": "Obtener aprobación y comunicar modelo de costos a gerencia de usuarios.",
+                        "herramienta": "Collabtive"
+                    }
+                ]
+            },
+            {
+                "id": "APO06.05",
+                "nombre": "Gestionar costos",
+                "actividades": [
+                    {
+                        "id": "APO06.05-A01",
+                        "descripcion": "Establecer escalas de tiempo para operación del proceso de gestión de costos.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.05-A02",
+                        "descripcion": "Definir métodos para identificar desviaciones, ROI y tendencias de costos de servicio.",
+                        "herramienta": "Zabbix"
+                    },
+                    {
+                        "id": "APO06.05-A03",
+                        "descripcion": "Definir consolidación de costos a nivel empresa y presentación a partes interesadas.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.05-A04",
+                        "descripcion": "Analizar desviaciones de costos y tomar medidas correctivas.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO06.05-A05",
+                        "descripcion": "Revisar resultados del análisis y aprobar medidas correctivas sugeridas.",
+                        "herramienta": "Collabtive"
+                    },
+                    {
+                        "id": "APO06.05-A06",
+                        "descripcion": "Identificar cambios en estructuras de costos y actualizar presupuestos.",
+                        "herramienta": "Apache OFBiz"
+                    },
+                    {
+                        "id": "APO06.05-A07",
+                        "descripcion": "Identificar formas de optimizar costos ante recortes presupuestarios.",
+                        "herramienta": "Zabbix"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO07",
+        "nombre": "Recursos humanos gestionados",
+        "practicas": [
+            {
+                "id": "APO07.01",
+                "nombre": "Adquirir y mantener una dotación de personal adecuada",
+                "actividades": [
+                    {
+                        "id": "APO07.01-A01",
+                        "descripcion": "Evaluar necesidades de personal periódicamente para respaldar objetivos empresariales e iniciativas I&T.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO07.01-A02",
+                        "descripcion": "Mantener procesos de reclutamiento y retención de personal alineados con políticas de la empresa.",
+                        "herramienta": "JFire"
+                    },
+                    {
+                        "id": "APO07.01-A03",
+                        "descripcion": "Establecer acuerdos de recursos flexibles (transferencias, contratistas externos).",
+                        "herramienta": "JFire"
+                    },
+                    {
+                        "id": "APO07.01-A04",
+                        "descripcion": "Incluir verificaciones de antecedentes en procesos de selección de personal.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO07.02",
+                "nombre": "Identificar al personal clave de TI",
+                "actividades": [
+                    {
+                        "id": "APO07.02-A01",
+                        "descripcion": "Proporcionar pautas sobre vacaciones mínimas obligatorias para personal clave.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO07.02-A02",
+                        "descripcion": "Gestionar cambios de trabajo y terminaciones laborales adecuadamente.",
+                        "herramienta": "JFire"
+                    },
+                    {
+                        "id": "APO07.02-A03",
+                        "descripcion": "Capturar y compartir conocimiento crítico con planes de sucesión y rotación laboral.",
+                        "herramienta": "Moodle"
+                    },
+                    {
+                        "id": "APO07.02-A04",
+                        "descripcion": "Probar planes de respaldo de personal periódicamente.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO07.03",
+                "nombre": "Mantener habilidades y competencias del personal",
+                "actividades": [
+                    {
+                        "id": "APO07.03-A01",
+                        "descripcion": "Identificar habilidades disponibles de recursos internos y externos.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO07.03-A02",
+                        "descripcion": "Detectar brechas de habilidades y desarrollar planes de acción.",
+                        "herramienta": "Moodle"
+                    },
+                    {
+                        "id": "APO07.03-A03",
+                        "descripcion": "Revisar periódicamente materiales y programas de capacitación.",
+                        "herramienta": "Moodle"
+                    },
+                    {
+                        "id": "APO07.03-A04",
+                        "descripcion": "Proporcionar acceso a repositorios de conocimiento para desarrollo de competencias.",
+                        "herramienta": "Moodle"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO08",
+        "nombre": "Relaciones gestionadas",
+        "practicas": [
+            {
+                "id": "APO08.01",
+                "nombre": "Comprender las expectativas del negocio",
+                "actividades": [
+                    {
+                        "id": "APO08.01-A01",
+                        "descripcion": "Identificar a los grupos de interés del negocio, sus intereses y áreas de responsabilidad.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.01-A02",
+                        "descripcion": "Revisar dirección actual de la empresa, problemas y alineación con arquitectura empresarial.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO08.01-A03",
+                        "descripcion": "Comprender entorno empresarial, limitaciones de procesos y factores regulatorios.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO08.01-A04",
+                        "descripcion": "Mantenerse al tanto de procesos de negocio y patrones de demanda de servicios.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.01-A05",
+                        "descripcion": "Gestionar expectativas comunicando prioridades, limitaciones financieras y dependencias.",
+                        "herramienta": "Zammad"
+                    },
+                    {
+                        "id": "APO08.01-A06",
+                        "descripcion": "Aclarar expectativas empresariales para servicios y soluciones de I&T con métricas definidas.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.01-A07",
+                        "descripcion": "Confirmar acuerdos entre TI y departamentos sobre expectativas y medición de resultados.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO08.02",
+                "nombre": "Alinear estrategia de I&T con expectativas del negocio",
+                "actividades": [
+                    {
+                        "id": "APO08.02-A01",
+                        "descripcion": "Posicionar a TI como socio de negocio identificando oportunidades y riesgos tecnológicos.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO08.02-A02",
+                        "descripcion": "Colaborar en nuevas iniciativas con gestión de portafolios desde su inicio y apoyar su desarrollo.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO08.03",
+                "nombre": "Gestionar la relación comercial",
+                "actividades": [
+                    {
+                        "id": "APO08.03-A01",
+                        "descripcion": "Asignar gerentes de relación únicos por unidad de negocio significativa.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.03-A02",
+                        "descripcion": "Gestionar relación formal y transparente enfocada en objetivos comunes.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO08.03-A03",
+                        "descripcion": "Definir y comunicar procedimiento de quejas y escalamiento.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO08.03-A04",
+                        "descripcion": "Asegurar decisiones clave acordadas por partes interesadas responsables.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.03-A05",
+                        "descripcion": "Planificar interacciones regulares y revisiones de servicios y estrategias.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO08.04",
+                "nombre": "Coordinar y comunicar",
+                "actividades": [
+                    {
+                        "id": "APO08.04-A01",
+                        "descripcion": "Coordinar cambios, planes de proyectos y políticas de lanzamiento.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO08.04-A02",
+                        "descripcion": "Coordinar actividades operativas, roles y responsabilidades.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.04-A03",
+                        "descripcion": "Responder a eventos críticos que afecten la relación empresarial.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO08.04-A04",
+                        "descripcion": "Mantener plan de comunicación con contenido, frecuencia y destinatarios definidos.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO08.05",
+                "nombre": "Proporcionar información para mejora continua",
+                "actividades": [
+                    {
+                        "id": "APO08.05-A01",
+                        "descripcion": "Realizar análisis de satisfacción de clientes y solucionar problemas detectados.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO08.05-A02",
+                        "descripcion": "Colaborar en identificación e implementación de iniciativas de mejora.",
+                        "herramienta": "OTRS/Znuny"
+                    },
+                    {
+                        "id": "APO08.05-A03",
+                        "descripcion": "Trabajar con gestión de servicios para asegurar mejoras continuas.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO09",
+        "nombre": "Acuerdos de servicios gestionados",
+        "practicas": [
+            {
+                "id": "APO09.01",
+                "nombre": "Identificar servicios de I&T",
+                "actividades": [
+                    {
+                        "id": "APO09.01-A01",
+                        "descripcion": "Evaluar servicios actuales y detectar brechas frente a necesidades empresariales.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.01-A02",
+                        "descripcion": "Analizar demanda futura y confirmar capacidad de servicios existentes.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.01-A03",
+                        "descripcion": "Analizar procesos de negocio para identificar necesidad de nuevos servicios.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.01-A04",
+                        "descripcion": "Comparar requisitos identificados con servicios existentes y combinarlos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.01-A05",
+                        "descripcion": "Revisar cartera de servicios para retirar servicios obsoletos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.01-A06",
+                        "descripcion": "Adecuar demandas a paquetes estandarizados para eficiencias generales.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO09.02",
+                "nombre": "Catálogo de servicios habilitados",
+                "actividades": [
+                    {
+                        "id": "APO09.02-A01",
+                        "descripcion": "Publicar catálogos de servicios relevantes habilitados por I&T.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.02-A02",
+                        "descripcion": "Actualizar componentes de catálogos de servicios continuamente.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.02-A03",
+                        "descripcion": "Informar a gestión de relaciones sobre actualizaciones de catálogos.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO09.03",
+                "nombre": "Definir y elaborar contratos de servicios",
+                "actividades": [
+                    {
+                        "id": "APO09.03-A01",
+                        "descripcion": "Analizar requisitos para acuerdos nuevos o modificados considerando aspectos técnicos y legales.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.03-A02",
+                        "descripcion": "Redactar acuerdos basados en servicios y niveles definidos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.03-A03",
+                        "descripcion": "Finalizar acuerdos con gestión de relaciones comerciales.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.03-A04",
+                        "descripcion": "Acordar acuerdos operativos internos que respalden contratos.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.03-A05",
+                        "descripcion": "Coordinar con proveedores externos para respaldar acuerdos de servicio.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO09.04",
+                "nombre": "Supervisar y reportar niveles de servicio",
+                "actividades": [
+                    {
+                        "id": "APO09.04-A01",
+                        "descripcion": "Establecer medidas para monitorear niveles de servicio.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.04-A02",
+                        "descripcion": "Evaluar desempeño y emitir informes periódicos formales.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.04-A03",
+                        "descripcion": "Realizar revisiones para pronosticar tendencias y mejorar servicios.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.04-A04",
+                        "descripcion": "Proveer información de gestión para facilitar decisiones.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.04-A05",
+                        "descripcion": "Acordar planes de acción ante problemas de rendimiento.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            },
+            {
+                "id": "APO09.05",
+                "nombre": "Revisar acuerdos y contratos",
+                "actividades": [
+                    {
+                        "id": "APO09.05-A01",
+                        "descripcion": "Revisar contratos periódicamente para garantizar vigencia y efectividad.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO09.05-A02",
+                        "descripcion": "Actualizar contratos con proveedores y acuerdos internos.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "objetivo": "APO10",
+        "nombre": "Proveedores gestionados",
+        "practicas": [
+            {
+                "id": "APO10.01",
+                "nombre": "Identificar y evaluar relaciones y contratos con proveedores",
+                "actividades": [
+                    {
+                        "id": "APO10.01-A01",
+                        "descripcion": "Analizar continuamente panorama empresarial para identificar nuevos socios y proveedores.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.01-A02",
+                        "descripcion": "Establecer criterios para priorizar proveedores críticos y contratos clave.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO10.01-A03",
+                        "descripcion": "Registrar y categorizar proveedores existentes con detalles relevantes.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO10.01-A04",
+                        "descripcion": "Mantener criterios de evaluación para revisión consistente de proveedores.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.01-A05",
+                        "descripcion": "Evaluar desempeño de proveedores actuales y alternativos periódicamente.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.01-A06",
+                        "descripcion": "Revisar solicitudes de información (RFI) y propuestas (RFP) y criterios de adjudicación.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.01-A07",
+                        "descripcion": "Evaluar RFI y RFP según criterios y verificar referencias de proveedores.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.01-A08",
+                        "descripcion": "Seleccionar proveedor adecuado y formalizar contrato.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO10.01-A09",
+                        "descripcion": "Para software, incluir términos contractuales como licencias y garantías.",
+                        "herramienta": "NA"
+                    }
+                ]
+            },
+            {
+                "id": "APO10.02",
+                "nombre": "Seleccionar proveedores",
+                "actividades": [
+                    {
+                        "id": "APO10.02-A01",
+                        "descripcion": "Para desarrollo, incluir propiedad intelectual, metodologías y pruebas en contratos.",
+                        "herramienta": "NA"
+                    },
+                    {
+                        "id": "APO10.02-A02",
+                        "descripcion": "Obtener asesoría legal para contratos de desarrollo de recursos.",
+                        "herramienta": "NA"
+                    },
+                    {
+                        "id": "APO10.02-A03",
+                        "descripcion": "Para infraestructura y servicios, incluir niveles de servicio y seguridad.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO10.03",
+                "nombre": "Gestionar relaciones y contratos",
+                "actividades": [
+                    {
+                        "id": "APO10.03-A01",
+                        "descripcion": "Asignar propietarios de relaciones responsables de calidad de servicios.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.03-A02",
+                        "descripcion": "Definir proceso formal de comunicación y revisión con proveedores.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO10.03-A03",
+                        "descripcion": "Mantener y renovar contratos cumpliendo estándares legales y regulatorios.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.03-A04",
+                        "descripcion": "Incluir auditorías independientes sobre instalaciones y controles de proveedores.",
+                        "herramienta": "NA"
+                    },
+                    {
+                        "id": "APO10.03-A05",
+                        "descripcion": "Usar relaciones efectivas para resolver disputas contractuales.",
+                        "herramienta": "NA"
+                    },
+                    {
+                        "id": "APO10.03-A06",
+                        "descripcion": "Definir responsabilidades y considerar contratista principal si hay múltiples proveedores.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.03-A07",
+                        "descripcion": "Evaluar efectividad de relaciones e identificar mejoras necesarias.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.03-A08",
+                        "descripcion": "Definir e implementar mejoras acordadas con proveedores.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO10.04",
+                "nombre": "Gestionar riesgo del proveedor",
+                "actividades": [
+                    {
+                        "id": "APO10.04-A01",
+                        "descripcion": "Incluir mitigaciones de riesgos en contratos como depósitos de software y privacidad.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.04-A02",
+                        "descripcion": "Monitorear riesgos relacionados con capacidad y fiabilidad del proveedor.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.04-A03",
+                        "descripcion": "Evaluar ecosistema de proveedores y riesgos de subcontratistas.",
+                        "herramienta": "Eramba"
+                    }
+                ]
+            },
+            {
+                "id": "APO10.05",
+                "nombre": "Supervisar desempeño de proveedores",
+                "actividades": [
+                    {
+                        "id": "APO10.05-A01",
+                        "descripcion": "Solicitar revisiones independientes de controles internos de proveedores.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.05-A02",
+                        "descripcion": "Definir criterios de supervisión y exigir reportes regulares de proveedores.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO10.05-A03",
+                        "descripcion": "Supervisar prestación de servicios asegurando calidad y cumplimiento.",
+                        "herramienta": "GLPI"
+                    },
+                    {
+                        "id": "APO10.05-A04",
+                        "descripcion": "Analizar desempeño y relación costo-beneficio de proveedores.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.05-A05",
+                        "descripcion": "Monitorear información externa sobre proveedores y cadena de suministro.",
+                        "herramienta": "Eramba"
+                    },
+                    {
+                        "id": "APO10.05-A06",
+                        "descripcion": "Registrar resultados de revisión y discutir mejoras con proveedor.",
+                        "herramienta": "GLPI"
+                    }
+                ]
+            }
+        ]
+    }
+]

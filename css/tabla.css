@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #1e1e1e;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+  background: #222;
+  border-bottom: 1px solid #333;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #4da6ff;
+}
+
+header nav a {
+  color: #4da6ff;
+  text-decoration: none;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+#tabla-container {
+  margin: 20px auto;
+  width: 95%;
+  max-width: 1200px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #444;
+  text-align: left;
+}
+
+th {
+  background: #333;
+  color: #4da6ff;
+}
+
+tr:nth-child(even) {
+  background: #242424;
+}
+
+tr:hover {
+  background: #333;
+}
