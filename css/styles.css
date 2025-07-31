@@ -1,35 +1,136 @@
-body { 
-  margin: 0; 
-  background: #1e1e1e; 
-  color: white; 
-  font-family: sans-serif; 
-  display: flex; 
+/* Reset */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #1e1e1e;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-svg { 
-  flex: 1; 
-  height: 100vh; 
+/* Encabezado */
+header {
+  text-align: center;
+  padding: 20px;
+  background: #222;
+  border-bottom: 1px solid #333;
 }
 
-circle { 
-  stroke: #fff; 
-  stroke-width: 1.5px; 
-  cursor: pointer; 
+header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #4da6ff;
 }
 
-text { 
-  fill: white; 
-  font-family: sans-serif; 
-  font-size: 12px; 
+header p {
+  margin: 8px 0 15px;
+  color: #ccc;
+  font-size: 14px;
 }
 
-/* Panel lateral */
-#infoPanel {
+/* Layout principal: 3 columnas */
+main {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 120px); /* Resta el header y footer */
+  overflow: hidden;
+}
+
+/* Panel de filtros (izquierda) */
+#filter-panel {
   width: 300px;
+  background: #2a2a2a;
+  border-right: 2px solid #444;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.combo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(40, 40, 40, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  width: 100%;
+}
+
+#objetivoSelect {
+  width: 100%;
+  height: 150px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: white;
+  font-size: 14px;
+  padding: 8px;
+  outline: none;
+}
+
+#selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.tag {
+  background: #4da6ff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tag span {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Botón */
+button {
+  margin-top: 15px;
+  background: #4da6ff;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+button:hover {
+  background: #3399ff;
+}
+
+/* Grafo en el centro */
+#graph-container {
+  flex: 1;
+  background: #1e1e1e;
+  position: relative;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Panel de información (derecha) */
+#infoPanel {
+  width: 320px;
   background: #2a2a2a;
   border-left: 2px solid #444;
   padding: 20px;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 #infoPanel h2 {
@@ -37,24 +138,44 @@ text {
   color: #4da6ff;
 }
 
-#infoPanel img {
-  max-width: 100%;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-#controls {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(30, 30, 30, 0.9);
-  color: white;
+/* Footer */
+footer {
+  text-align: center;
   padding: 10px;
-  border-radius: 8px;
-  font-family: sans-serif;
-  z-index: 10;
+  font-size: 12px;
+  color: #777;
+  background: #222;
+  border-top: 1px solid #333;
 }
 
+/* Estilo nodos y texto */
+circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
+text {
+  fill: white;
+  font-size: 12px;
+  pointer-events: none;
+}
 #objetivoSelect {
-  width: 200px;
-  height: 100px;
+  width: 100%;
+  height: 200px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: white;
+  font-size: 14px;
+  padding: 8px;
+  outline: none;
+  white-space: normal; /* 🔑 Permite salto de línea */
+  line-height: 1.4; /* Mejora la separación entre líneas */
+}
+
+#objetivoSelect option {
+  white-space: normal;  /* 🔑 Texto en varias líneas */
+  word-wrap: break-word; /* Ajusta texto largo dentro del ancho */
+  padding: 4px 6px;
 }
