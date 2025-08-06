@@ -6,10 +6,8 @@ const resetBtn = document.getElementById("resetBtn");
 const width = window.innerWidth - 300;
 const height = window.innerHeight;
 
-// Contenedor para zoom y pan
 const container = svg.append("g");
 
-// Habilitar zoom y pan
 svg.call(
   d3.zoom()
     .scaleExtent([0.1, 3])
@@ -20,7 +18,6 @@ d3.json("data/grafo.json").then((data) => {
   const allNodes = data.nodes;
   const allLinks = data.links;
 
-  // Llenar el select con objetivos
   const objetivos = allNodes.filter((d) => d.tipo === "objetivo");
   objetivos.forEach((obj) => {
     const option = document.createElement("option");
@@ -29,28 +26,23 @@ d3.json("data/grafo.json").then((data) => {
     objetivoSelect.appendChild(option);
   });
 
-  // Renderizar grafo filtrado
   function renderGraph(filteredObjetivos = []) {
-    container.selectAll("*").remove(); // Limpiar el grafo
+    container.selectAll("*").remove();
 
     let nodesToShow = [];
     let linksToShow = [];
 
     if (filteredObjetivos.length > 0) {
       const selectedSet = new Set(filteredObjetivos);
-
-      // Objetivos seleccionados
       const objetivosSeleccionados = allNodes.filter(
         (n) => n.tipo === "objetivo" && selectedSet.has(n.id)
       );
       nodesToShow.push(...objetivosSeleccionados);
 
-      // Herramientas conectadas y enlaces
       allLinks.forEach((link) => {
         if (selectedSet.has(link.source)) {
           const objetivoNode = allNodes.find((n) => n.id === link.source);
           const herramientaNode = allNodes.find((n) => n.id === link.target);
-
           if (objetivoNode && herramientaNode) {
             nodesToShow.push(herramientaNode);
             linksToShow.push({ source: objetivoNode, target: herramientaNode });
@@ -58,7 +50,6 @@ d3.json("data/grafo.json").then((data) => {
         }
       });
     } else {
-      // Grafo completo
       nodesToShow = [...allNodes];
       linksToShow = allLinks.map((l) => {
         const sourceNode = allNodes.find((n) => n.id === l.source);
@@ -67,17 +58,14 @@ d3.json("data/grafo.json").then((data) => {
       });
     }
 
-    // Eliminar nodos duplicados
     nodesToShow = Array.from(new Map(nodesToShow.map((n) => [n.id, n])).values());
 
-    // Simulación D3
     const simulation = d3
       .forceSimulation(nodesToShow)
       .force("link", d3.forceLink(linksToShow).distance(150))
       .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2));
 
-    // Enlaces
     const link = container
       .append("g")
       .attr("stroke", "#aaa")
@@ -87,7 +75,6 @@ d3.json("data/grafo.json").then((data) => {
       .append("line")
       .attr("stroke-width", 2);
 
-    // Nodos
     const node = container
       .append("g")
       .selectAll("circle")
@@ -99,7 +86,6 @@ d3.json("data/grafo.json").then((data) => {
       .call(drag(simulation))
       .on("click", (event, d) => mostrarInfo(d));
 
-    // Etiquetas
     const label = container
       .append("g")
       .selectAll("text")
@@ -110,7 +96,6 @@ d3.json("data/grafo.json").then((data) => {
       .attr("text-anchor", "middle")
       .attr("dy", -25);
 
-    // Tick
     simulation.on("tick", () => {
       link
         .attr("x1", (d) => d.source.x)
@@ -123,18 +108,15 @@ d3.json("data/grafo.json").then((data) => {
     });
   }
 
-  // Render inicial: todo
   renderGraph();
 
-  // Gestión manual de selección acumulativa con clic simple
   objetivoSelect.addEventListener("mousedown", (e) => {
-    e.preventDefault(); // Evitar comportamiento por defecto
+    e.preventDefault();
     const option = e.target;
-    option.selected = !option.selected; // Alternar selección
+    option.selected = !option.selected;
     updateSelectedTags();
   });
 
-  // Función para actualizar chips y grafo
   function updateSelectedTags() {
     selectedTagsContainer.innerHTML = "";
     const selectedOptions = Array.from(objetivoSelect.selectedOptions);
@@ -150,7 +132,6 @@ d3.json("data/grafo.json").then((data) => {
     renderGraph(selectedValues);
   }
 
-  // Permitir eliminar chips
   selectedTagsContainer.addEventListener("click", (e) => {
     if (e.target.tagName === "SPAN") {
       const value = e.target.getAttribute("data-value");
@@ -162,14 +143,12 @@ d3.json("data/grafo.json").then((data) => {
     }
   });
 
-  // Botón Reset: mostrar todo
   resetBtn.addEventListener("click", () => {
     [...objetivoSelect.options].forEach(opt => opt.selected = false);
     selectedTagsContainer.innerHTML = "";
     renderGraph();
   });
 
-  // Función drag
   function drag(simulation) {
     return d3
       .drag()
@@ -189,7 +168,6 @@ d3.json("data/grafo.json").then((data) => {
       });
   }
 
-  // Mostrar información lateral
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
       infoPanel.innerHTML = `
@@ -206,5 +184,16 @@ d3.json("data/grafo.json").then((data) => {
         <h3>Casos de uso:</h3>
         <ul>${d.casos_uso ? d.casos_uso.map((c) => `<li>${c}</li>`).join("") : "<li>No especificados</li>"}</ul>`;
     }
+  }
+});
+
+document.getElementById("verTablaBtn").addEventListener("click", () => {
+  const selectedValues = Array.from(objetivoSelect.selectedOptions).map(opt => opt.value);
+
+  if (selectedValues.length === 0) {
+    window.location.href = "tabla.html";
+  } else {
+    localStorage.setItem("filtroObjetivos", JSON.stringify(selectedValues));
+    window.location.href = "tabla.html";
   }
 });

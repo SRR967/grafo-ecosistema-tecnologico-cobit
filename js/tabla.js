@@ -1,8 +1,12 @@
 let dataGlobal = [];
 let paginaActual = 1;
-let filasPorPagina = 50; // valor inicial
+let filasPorPagina = 50;
 
-// Debounce
+// Guardamos los filtros en uso
+let filtrosActivos = null;
+
+const filtroGuardado = JSON.parse(localStorage.getItem("filtroObjetivos")) || [];
+
 function debounce(func, delay) {
   let timeout;
   return (...args) => {
@@ -15,21 +19,36 @@ fetch("data/actividades.json")
   .then(response => response.json())
   .then(data => {
     dataGlobal = data;
-    construirTabla(dataGlobal);
     cargarFiltros(dataGlobal);
+
+    if (filtroGuardado.length > 0) {
+      // Aplicar filtro desde el grafo
+      filtrosActivos = dataGlobal.filter(obj => filtroGuardado.includes(obj.id));
+      construirTabla(filtrosActivos);
+
+      // Seleccionar en el filtro visual si existe
+      const filtroObjetivo = document.getElementById("filtroObjetivo");
+      for (const option of filtroObjetivo.options) {
+        option.selected = filtroGuardado.includes(option.value.split(" - ")[0]);
+      }
+
+      localStorage.removeItem("filtroObjetivos");
+    } else {
+      filtrosActivos = dataGlobal;
+      construirTabla(filtrosActivos);
+    }
   });
 
 function construirTabla(data) {
   const tbody = document.querySelector("#tabla-cobit tbody");
   tbody.innerHTML = "";
 
-  // Aplanar datos en filas únicas
   const filas = [];
   data.forEach(objetivo => {
     objetivo.practicas.forEach(practica => {
       practica.actividades.forEach(actividad => {
         filas.push({
-          objetivo: `${objetivo.id} - ${objetivo.nombre}`, // ✅ corregido
+          objetivo: `${objetivo.id} - ${objetivo.nombre}`,
           practica: `${practica.id} - ${practica.nombre}`,
           actividad: `${actividad.id} - ${actividad.descripcion}`,
           herramienta: actividad.herramienta || "-",
@@ -41,8 +60,6 @@ function construirTabla(data) {
     });
   });
 
-
-  // Paginación
   const inicio = (paginaActual - 1) * filasPorPagina;
   const fin = inicio + filasPorPagina;
   const filasPagina = filas.slice(inicio, fin);
@@ -88,14 +105,14 @@ function cargarFiltros(data) {
   document.getElementById("filasPorPagina").addEventListener("change", (e) => {
     filasPorPagina = parseInt(e.target.value);
     paginaActual = 1;
-    construirTabla(filtrarDatosActuales());
+    construirTabla(filtrosActivos);
   });
-
 }
 
 function aplicarFiltros() {
   paginaActual = 1;
-  construirTabla(filtrarDatosActuales());
+  filtrosActivos = filtrarDatosActuales();
+  construirTabla(filtrosActivos);
 }
 
 function filtrarDatosActuales() {
@@ -131,7 +148,7 @@ function actualizarControlesPaginacion(totalFilas) {
   btnPrev.disabled = paginaActual === 1;
   btnPrev.onclick = () => {
     paginaActual--;
-    construirTabla(filtrarDatosActuales());
+    construirTabla(filtrosActivos);
   };
 
   const btnNext = document.createElement("button");
@@ -139,7 +156,7 @@ function actualizarControlesPaginacion(totalFilas) {
   btnNext.disabled = paginaActual === totalPaginas;
   btnNext.onclick = () => {
     paginaActual++;
-    construirTabla(filtrarDatosActuales());
+    construirTabla(filtrosActivos);
   };
 
   const indicador = document.createElement("span");
@@ -147,10 +164,3 @@ function actualizarControlesPaginacion(totalFilas) {
 
   controles.append(btnPrev, indicador, btnNext);
 }
-
-// Filtrar desde el grafo
-window.filtrarPorObjetivosDesdeGrafo = function (objetivosSeleccionados) {
-  paginaActual = 1;
-  const filtrados = dataGlobal.filter(obj => objetivosSeleccionados.includes(obj.id));
-  construirTabla(filtrados);
-};

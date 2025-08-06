@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import re
+# Convierte el excel de objetivos,practicas y actividades a json
 
 def excel_a_json(ruta_excel, ruta_json):
     # Leer Excel como texto para evitar NaN automáticos
