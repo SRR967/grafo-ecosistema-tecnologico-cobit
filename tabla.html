@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Tabla Dinámica COBIT 2019</title>
   <link rel="stylesheet" href="css/tabla.css">
 </head>
+
 <body>
   <header>
     <h1>Tabla Dinámica de Objetivos, Prácticas y Actividades</h1>
@@ -12,6 +14,36 @@
     <nav>
       <a href="index.html">🔙 Volver al Grafo</a>
     </nav>
+
+    <!-- Filtros -->
+    <div id="filtros">
+      <input type="text" id="filtro" placeholder="🔍 Buscar en toda la tabla...">
+
+      <div class="filtro-grupo">
+        <label for="filtroObjetivo">🎯 Filtrar por Objetivo:</label>
+        <select id="filtroObjetivo">
+          <option value="">Todos</option>
+        </select>
+      </div>
+
+      <div class="filtro-grupo">
+        <label for="filtroHerramienta">🛠 Filtrar por Herramienta:</label>
+        <select id="filtroHerramienta">
+          <option value="">Todas</option>
+        </select>
+      </div>
+
+      <!-- ✅ Selector fijo para filas por página -->
+      <div class="filtro-grupo">
+        <label for="filasPorPagina">📄 Filas por página:</label>
+        <select id="filasPorPagina">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50" selected>50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -23,15 +55,25 @@
             <th>Práctica</th>
             <th>Actividad</th>
             <th>Herramienta</th>
+            <th>Justificación Técnica</th>
+            <th>Observaciones</th>
+            <th>Integración</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Se llena dinámicamente -->
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
+
+    <!-- Controles de paginación dinámicos -->
+    <div id="paginacion"></div>
   </main>
+
+
+  <footer>
+    <p>© 2025 - Proyecto de grado desarrollado por [Tu Nombre]</p>
+  </footer>
 
   <script src="js/tabla.js"></script>
 </body>
+
 </html>

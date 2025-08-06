@@ -3,6 +3,9 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #1e1e1e;
   color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 header {
@@ -14,21 +17,64 @@ header {
 
 header h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 26px;
   color: #4da6ff;
 }
 
-header nav a {
+header p {
+  margin: 8px 0 15px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+nav a {
+  display: inline-block;
+  margin-top: 10px;
   color: #4da6ff;
   text-decoration: none;
-  margin-top: 10px;
-  display: inline-block;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+#filtros {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+#filtros input,
+#filtros select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: white;
+  outline: none;
+}
+
+#filtros input {
+  width: 300px;
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+main {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
 }
 
 #tabla-container {
-  margin: 20px auto;
-  width: 95%;
-  max-width: 1200px;
+  max-width: 95%;
+  margin: 0 auto;
   overflow-x: auto;
 }
 
@@ -36,24 +82,117 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: #2a2a2a;
-  border: 1px solid #444;
+}
+
+thead {
+  background: #333;
 }
 
 th, td {
-  padding: 10px;
   border: 1px solid #444;
+  padding: 8px;
   text-align: left;
+  vertical-align: top;
 }
 
 th {
-  background: #333;
   color: #4da6ff;
 }
 
-tr:nth-child(even) {
+tbody tr:nth-child(even) {
   background: #242424;
 }
 
-tr:hover {
-  background: #333;
+tbody tr:hover {
+  background: #3a3a3a;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #777;
+  background: #222;
+  border-top: 1px solid #333;
+}
+
+/* Scrollbar estilizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+::-webkit-scrollbar-thumb {
+  background: #4da6ff;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3399ff;
+}
+#paginacion {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+#paginacion button {
+  background: #4da6ff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+#paginacion button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+#paginacion {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+#paginacion select {
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+#paginacion button {
+  background: #4da6ff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+#paginacion button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+
+.filtro-grupo label {
+  font-size: 13px;
+  margin-bottom: 3px;
+  color: #ccc;
+}
+
+#filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 15px;
 }
