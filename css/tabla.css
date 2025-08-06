@@ -196,3 +196,18 @@ footer {
   justify-content: center;
   margin-top: 15px;
 }
+
+.volver-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #4da6ff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.volver-btn:hover {
+  background: #3399ff;
+}
+

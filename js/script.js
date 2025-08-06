@@ -110,6 +110,19 @@ d3.json("data/grafo.json").then((data) => {
 
   renderGraph();
 
+  // 🔁 NUEVO: Cargar filtros previos guardados en localStorage (desde tabla.html)
+  const filtroDesdeTabla = localStorage.getItem("filtroDesdeTabla");
+  if (filtroDesdeTabla) {
+    const ids = JSON.parse(filtroDesdeTabla);
+    [...objetivoSelect.options].forEach(opt => {
+      if (ids.includes(opt.value)) {
+        opt.selected = true;
+      }
+    });
+    updateSelectedTags(); // Aplicar selección al grafo y chips
+    localStorage.removeItem("filtroDesdeTabla"); // Limpiar después de usar
+  }
+
   objetivoSelect.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;

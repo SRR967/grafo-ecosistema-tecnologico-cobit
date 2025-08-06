@@ -2,40 +2,37 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tabla Dinámica COBIT 2019</title>
-  <link rel="stylesheet" href="css/tabla.css">
+  <link rel="stylesheet" href="css/tabla.css" />
 </head>
 
 <body>
   <header>
     <h1>Tabla Dinámica de Objetivos, Prácticas y Actividades</h1>
     <p>Explora las relaciones entre Objetivos COBIT 2019, sus Prácticas y Actividades con herramientas asignadas.</p>
-    <nav>
-      <a href="index.html">🔙 Volver al Grafo</a>
-    </nav>
+    <a class="volver-btn" href="index.html" id="btnVolverGrafo">Volver al Grafo</a>
 
     <!-- Filtros -->
     <div id="filtros">
-      <input type="text" id="filtro" placeholder="🔍 Buscar en toda la tabla...">
+      <input type="text" id="filtro" placeholder="Buscar por descripción o herramienta...">
 
       <div class="filtro-grupo">
-        <label for="filtroObjetivo">🎯 Filtrar por Objetivo:</label>
-        <select id="filtroObjetivo">
+        <label for="filtroObjetivo">Filtrar por Objetivo:</label>
+        <select id="filtroObjetivo" multiple>
           <option value="">Todos</option>
         </select>
       </div>
 
       <div class="filtro-grupo">
-        <label for="filtroHerramienta">🛠 Filtrar por Herramienta:</label>
+        <label for="filtroHerramienta">Filtrar por Herramienta:</label>
         <select id="filtroHerramienta">
           <option value="">Todas</option>
         </select>
       </div>
 
-      <!-- ✅ Selector fijo para filas por página -->
       <div class="filtro-grupo">
-        <label for="filasPorPagina">📄 Filas por página:</label>
+        <label for="filasPorPagina">Filas por página:</label>
         <select id="filasPorPagina">
           <option value="10">10</option>
           <option value="25">25</option>
@@ -64,13 +61,14 @@
       </table>
     </div>
 
-    <!-- Controles de paginación dinámicos -->
+    <!-- Controles de paginación -->
     <div id="paginacion"></div>
   </main>
 
-
   <footer>
-    <p>© 2025 - Proyecto de grado desarrollado por [Tu Nombre]</p>
+    <p>© 2025 · Proyecto de grado – Ecosistema Tecnológico para la Implementación de Hojas de Ruta de COBIT 2019 <br>
+      Desarrollado por: Johana Paola Palacio Osorio · Jesús Santiago Ramón Ramos · Jhoan Esteban Soler Giraldo <br>
+      Facultad de Ingeniería – Universidad del Quindío</p>
   </footer>
 
   <script src="js/tabla.js"></script>

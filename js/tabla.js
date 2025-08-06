@@ -1,8 +1,6 @@
 let dataGlobal = [];
 let paginaActual = 1;
 let filasPorPagina = 50;
-
-// Guardamos los filtros en uso
 let filtrosActivos = null;
 
 const filtroGuardado = JSON.parse(localStorage.getItem("filtroObjetivos")) || [];
@@ -22,15 +20,16 @@ fetch("data/actividades.json")
     cargarFiltros(dataGlobal);
 
     if (filtroGuardado.length > 0) {
-      // Aplicar filtro desde el grafo
       filtrosActivos = dataGlobal.filter(obj => filtroGuardado.includes(obj.id));
       construirTabla(filtrosActivos);
 
-      // Seleccionar en el filtro visual si existe
       const filtroObjetivo = document.getElementById("filtroObjetivo");
-      for (const option of filtroObjetivo.options) {
-        option.selected = filtroGuardado.includes(option.value.split(" - ")[0]);
-      }
+      [...filtroObjetivo.options].forEach(option => {
+        const id = option.value.split(" - ")[0];
+        if (filtroGuardado.includes(id)) {
+          option.selected = true;
+        }
+      });
 
       localStorage.removeItem("filtroObjetivos");
     } else {
@@ -99,13 +98,20 @@ function cargarFiltros(data) {
   herramientasSet.forEach(h => filtroHerramienta.append(new Option(h, h)));
 
   document.getElementById("filtro").addEventListener("input", debounce(aplicarFiltros, 300));
-  filtroObjetivo.addEventListener("change", aplicarFiltros);
   filtroHerramienta.addEventListener("change", aplicarFiltros);
 
   document.getElementById("filasPorPagina").addEventListener("change", (e) => {
     filasPorPagina = parseInt(e.target.value);
     paginaActual = 1;
     construirTabla(filtrosActivos);
+  });
+
+  // ✅ NUEVO: Selector múltiple con clic tipo grafo
+  filtroObjetivo.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    const option = e.target;
+    option.selected = !option.selected;
+    aplicarFiltros();
   });
 }
 
@@ -117,24 +123,28 @@ function aplicarFiltros() {
 
 function filtrarDatosActuales() {
   const texto = document.getElementById("filtro").value.toLowerCase();
-  const objetivoFiltro = document.getElementById("filtroObjetivo").value.toLowerCase();
+  const filtroObjetivoSelect = document.getElementById("filtroObjetivo");
+  const objetivoSeleccionados = Array.from(filtroObjetivoSelect.selectedOptions).map(opt => opt.value.toLowerCase());
   const herramientaFiltro = document.getElementById("filtroHerramienta").value.toLowerCase();
 
   return dataGlobal
-    .map(obj => ({
-      ...obj,
-      practicas: obj.practicas.map(pr => ({
+    .map(obj => {
+      const objetivoNombre = `${obj.id} - ${obj.nombre}`.toLowerCase();
+      if (objetivoSeleccionados.length > 0 && !objetivoSeleccionados.includes(objetivoNombre)) {
+        return null;
+      }
+
+      const practicasFiltradas = obj.practicas.map(pr => ({
         ...pr,
         actividades: pr.actividades.filter(act =>
           (texto === "" || (act.descripcion + act.herramienta).toLowerCase().includes(texto)) &&
           (herramientaFiltro === "" || act.herramienta.toLowerCase() === herramientaFiltro)
         )
-      })).filter(pr => pr.actividades.length > 0)
-    }))
-    .filter(obj =>
-      (objetivoFiltro === "" || `${obj.id} - ${obj.nombre}`.toLowerCase() === objetivoFiltro) &&
-      obj.practicas.length > 0
-    );
+      })).filter(pr => pr.actividades.length > 0);
+
+      return practicasFiltradas.length > 0 ? { ...obj, practicas: practicasFiltradas } : null;
+    })
+    .filter(Boolean);
 }
 
 function actualizarControlesPaginacion(totalFilas) {
@@ -164,3 +174,14 @@ function actualizarControlesPaginacion(totalFilas) {
 
   controles.append(btnPrev, indicador, btnNext);
 }
+
+document.getElementById("btnVolverGrafo").addEventListener("click", () => {
+  const objetivoSelect = document.getElementById("filtroObjetivo");
+  const seleccionados = Array.from(objetivoSelect.selectedOptions).map(opt => opt.value.split(" - ")[0]);
+
+  if (seleccionados.length > 0) {
+    localStorage.setItem("filtroDesdeTabla", JSON.stringify(seleccionados));
+  } else {
+    localStorage.removeItem("filtroDesdeTabla");
+  }
+});
