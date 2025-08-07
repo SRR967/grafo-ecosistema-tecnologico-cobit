@@ -48,7 +48,6 @@ footer {
   max-width: 95%;
   margin: 0 auto;
   overflow-x: auto;
-  animation: fadeInUp 0.6s ease-out;
 }
 
 table {
@@ -76,23 +75,8 @@ tbody tr:nth-child(even) {
   background: #242424;
 }
 
-#tabla-cobit tbody tr {
-  transition: background-color 0.3s, transform 0.2s;
-}
-
 #tabla-cobit tbody tr:hover {
   background-color: #333;
-  transform: scale(1.01);
-}
-
-/* === ANIMACIONES === */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes aparecerIzquierda {
-  to { opacity: 1; transform: translateX(0); }
 }
 
 /* === SCROLLBAR === */
@@ -159,17 +143,11 @@ tbody tr:nth-child(even) {
   font-weight: 500;
   text-decoration: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease;
   z-index: 1000;
-  opacity: 0;
-  transform: translateX(-20px);
-  animation: aparecerIzquierda 0.5s ease-out forwards;
 }
 
 .boton-regresar:hover {
   background-color: #3399ff;
-  transform: scale(1.05);
-  box-shadow: 0 0 8px #3399ff88;
 }
 
 /* === SELECTORES / INPUTS === */
@@ -232,14 +210,13 @@ tbody tr:nth-child(even) {
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
-  transition: background 0.3s ease;
 }
 
 .btn-limpiar:hover {
   background: #e63946;
 }
 
-/* === BOTÓN FLOTANTE AJUSTES === */
+/* === BOTÓN AJUSTES / PANEL FILTROS === */
 .btn-filtro-toggle {
   position: fixed;
   top: 20px;
@@ -252,7 +229,6 @@ tbody tr:nth-child(even) {
   font-size: 14px;
   z-index: 999;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .btn-filtro-toggle:hover {
@@ -260,7 +236,6 @@ tbody tr:nth-child(even) {
   box-shadow: 0 0 10px #3399ff88;
 }
 
-/* === PANEL LATERAL DE FILTROS === */
 .filtro-menu {
   position: fixed;
   top: 0;
@@ -269,7 +244,7 @@ tbody tr:nth-child(even) {
   height: 100%;
   background-color: #1e1e1e;
   border-left: 1px solid #333;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: -2px 0 10px rgba(0,0,0,0.5);
   padding: 20px;
   transition: right 0.4s ease;
   z-index: 1000;
@@ -318,7 +293,6 @@ tbody tr:nth-child(even) {
   white-space: normal;
   position: relative;
   gap: 10px;
-  transition: background 0.3s;
 }
 
 .tag:hover {
@@ -332,7 +306,6 @@ tbody tr:nth-child(even) {
   background: #ffffff33;
   padding: 2px 6px;
   border-radius: 50%;
-  transition: background 0.2s ease;
 }
 
 .tag span:hover {
@@ -347,7 +320,7 @@ tbody tr:nth-child(even) {
   border-radius: 9999px;
 }
 
-/* Scroll personalizado para chips */
+/* === SCROLLBAR TAGS === */
 #tagsObjetivos::-webkit-scrollbar {
   width: 6px;
 }
