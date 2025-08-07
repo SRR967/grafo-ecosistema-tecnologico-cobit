@@ -107,7 +107,6 @@ function cargarFiltros(data) {
     construirTabla(filtrosActivos);
   });
 
-  // ✅ Selector múltiple tipo grafo
   filtroObjetivo.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;
@@ -228,4 +227,11 @@ document.getElementById("abrirFiltros").addEventListener("click", () => {
 
 document.getElementById("cerrarFiltros").addEventListener("click", () => {
   document.getElementById("panelFiltros").classList.remove("abierto");
+});
+
+document.getElementById("limpiarObjetivos").addEventListener("click", () => {
+  const filtroObjetivo = document.getElementById("filtroObjetivo");
+  Array.from(filtroObjetivo.options).forEach(opt => opt.selected = false);
+  actualizarTagsObjetivos();
+  aplicarFiltros();
 });
