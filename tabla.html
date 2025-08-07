@@ -11,9 +11,16 @@
   <header>
     <h1>Tabla Dinámica de Objetivos, Prácticas y Actividades</h1>
     <p>Explora las relaciones entre Objetivos COBIT 2019, sus Prácticas y Actividades con herramientas asignadas.</p>
-    <a class="volver-btn" href="index.html" id="btnVolverGrafo">Volver al Grafo</a>
+    <a href="index.html" id="btnVolverGrafo" class="boton-regresar">← Regresar al Grafo</a>
 
-    <!-- Filtros -->
+    <!-- Botón flotante para abrir menú de filtros -->
+    <button id="abrirFiltros" class="btn-filtro-toggle">⚙️ Ajustes</button>
+  </header>
+
+  <!-- Menú lateral de filtros -->
+  <aside id="panelFiltros" class="filtro-menu">
+    <button id="cerrarFiltros" class="btn-cerrar">✖</button>
+
     <div id="filtros">
       <input type="text" id="filtro" placeholder="Buscar por descripción o herramienta...">
 
@@ -22,6 +29,7 @@
         <select id="filtroObjetivo" multiple>
           <option value="">Todos</option>
         </select>
+        <div id="tagsObjetivos" class="tag-container"></div>
       </div>
 
       <div class="filtro-grupo">
@@ -41,7 +49,7 @@
         </select>
       </div>
     </div>
-  </header>
+  </aside>
 
   <main>
     <div id="tabla-container">
@@ -61,7 +69,6 @@
       </table>
     </div>
 
-    <!-- Controles de paginación -->
     <div id="paginacion"></div>
   </main>
 
@@ -72,6 +79,17 @@
   </footer>
 
   <script src="js/tabla.js"></script>
+
+  <!-- Script para abrir/cerrar el panel -->
+  <script>
+    document.getElementById("abrirFiltros").addEventListener("click", () => {
+      document.getElementById("panelFiltros").classList.add("abierto");
+    });
+
+    document.getElementById("cerrarFiltros").addEventListener("click", () => {
+      document.getElementById("panelFiltros").classList.remove("abierto");
+    });
+  </script>
 </body>
 
 </html>

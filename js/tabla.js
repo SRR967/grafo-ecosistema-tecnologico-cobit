@@ -31,6 +31,7 @@ fetch("data/actividades.json")
         }
       });
 
+      actualizarTagsObjetivos();
       localStorage.removeItem("filtroObjetivos");
     } else {
       filtrosActivos = dataGlobal;
@@ -106,14 +107,49 @@ function cargarFiltros(data) {
     construirTabla(filtrosActivos);
   });
 
-  // ✅ NUEVO: Selector múltiple con clic tipo grafo
+  // ✅ Selector múltiple tipo grafo
   filtroObjetivo.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;
     option.selected = !option.selected;
+    actualizarTagsObjetivos();
     aplicarFiltros();
   });
 }
+
+function actualizarTagsObjetivos() {
+  const contenedor = document.getElementById("tagsObjetivos");
+  const filtroObjetivo = document.getElementById("filtroObjetivo");
+
+  contenedor.innerHTML = "";
+
+  const seleccionados = Array.from(filtroObjetivo.selectedOptions);
+
+  if (seleccionados.length === 0) return;
+
+  seleccionados.forEach(opt => {
+    const tag = document.createElement("div");
+    tag.className = "tag";
+    tag.innerHTML = `${opt.text} <span data-value="${opt.value}">&times;</span>`;
+    contenedor.appendChild(tag);
+  });
+}
+
+
+
+document.getElementById("tagsObjetivos").addEventListener("click", (e) => {
+  if (e.target.tagName === "SPAN") {
+    const valor = e.target.getAttribute("data-value");
+    const filtroObjetivo = document.getElementById("filtroObjetivo");
+
+    Array.from(filtroObjetivo.options).forEach(opt => {
+      if (opt.value === valor) opt.selected = false;
+    });
+
+    actualizarTagsObjetivos();
+    aplicarFiltros();
+  }
+});
 
 function aplicarFiltros() {
   paginaActual = 1;
@@ -184,4 +220,12 @@ document.getElementById("btnVolverGrafo").addEventListener("click", () => {
   } else {
     localStorage.removeItem("filtroDesdeTabla");
   }
+});
+
+document.getElementById("abrirFiltros").addEventListener("click", () => {
+  document.getElementById("panelFiltros").classList.add("abierto");
+});
+
+document.getElementById("cerrarFiltros").addEventListener("click", () => {
+  document.getElementById("panelFiltros").classList.remove("abierto");
 });
