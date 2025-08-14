@@ -1,23 +1,34 @@
+// js/script.js
 const svg = d3.select("svg");
+
 const infoPanel = document.getElementById("infoPanel");
 const objetivoSelect = document.getElementById("objetivoSelect");
 const selectedTagsContainer = document.getElementById("selected-tags");
 const resetBtn = document.getElementById("resetBtn");
-const width = window.innerWidth - 300;
+const width = window.innerWidth - 300; // restar el panel izquierdo
 const height = window.innerHeight;
 
 const container = svg.append("g");
 
+// Zoom & pan
 svg.call(
   d3.zoom()
     .scaleExtent([0.1, 3])
     .on("zoom", (event) => container.attr("transform", event.transform))
 );
+// Permitir usar dblclick en nodos (desactivar zoom por dblclick)
+svg.on("dblclick.zoom", null);
+
+// Variables de estado del grafo actual para resaltar
+let nodeSel, linkSel, labelSel;
+let currentNodes = [];
+let currentLinks = [];
 
 d3.json("data/grafo.json").then((data) => {
   const allNodes = data.nodes;
   const allLinks = data.links;
 
+  // Llenar selector de objetivos
   const objetivos = allNodes.filter((d) => d.tipo === "objetivo");
   objetivos.forEach((obj) => {
     const option = document.createElement("option");
@@ -58,24 +69,32 @@ d3.json("data/grafo.json").then((data) => {
       });
     }
 
+    // Eliminar nodos duplicados
     nodesToShow = Array.from(new Map(nodesToShow.map((n) => [n.id, n])).values());
 
+    currentNodes = nodesToShow;
+    currentLinks = linksToShow;
+
+    // Simulación
     const simulation = d3
       .forceSimulation(nodesToShow)
       .force("link", d3.forceLink(linksToShow).distance(150))
       .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2));
 
-    const link = container
+    // Enlaces
+    linkSel = container
       .append("g")
       .attr("stroke", "#aaa")
       .selectAll("line")
       .data(linksToShow)
       .enter()
       .append("line")
-      .attr("stroke-width", 2);
+      .attr("stroke-width", 2)
+      .style("opacity", 1);
 
-    const node = container
+    // Nodos
+    nodeSel = container
       .append("g")
       .selectAll("circle")
       .data(nodesToShow)
@@ -83,10 +102,30 @@ d3.json("data/grafo.json").then((data) => {
       .append("circle")
       .attr("r", 15)
       .attr("fill", (d) => (d.tipo === "objetivo" ? "#4da6ff" : "#00c853"))
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1.5)
+      .style("cursor", "pointer")
       .call(drag(simulation))
-      .on("click", (event, d) => mostrarInfo(d));
+      .on("click", (event, d) => {
+        mostrarInfo(d);
+        if (d.tipo === "objetivo") {
+          highlightNeighborhood(d);
+        } else {
+          clearHighlight(); // si clic en herramienta, quita el resaltado
+          mostrarInfo(d);
+        }
+      })
+      .on("dblclick", (event, d) => {
+        // Doble clic: ir a tabla filtrada si es objetivo
+        if (d.tipo === "objetivo") {
+          localStorage.setItem("filtroObjetivos", JSON.stringify([d.id]));
+          window.location.href = "tabla.html";
+        }
+        event.stopPropagation();
+      });
 
-    const label = container
+    // Etiquetas
+    labelSel = container
       .append("g")
       .selectAll("text")
       .data(nodesToShow)
@@ -94,35 +133,76 @@ d3.json("data/grafo.json").then((data) => {
       .append("text")
       .text((d) => d.id)
       .attr("text-anchor", "middle")
-      .attr("dy", -25);
+      .attr("dy", -25)
+      .attr("fill", "white");
 
+    // Tick
     simulation.on("tick", () => {
-      link
+      linkSel
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
 
-      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-      label.attr("x", (d) => d.x).attr("y", (d) => d.y);
+      nodeSel.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+      labelSel.attr("x", (d) => d.x).attr("y", (d) => d.y);
     });
   }
 
+  // Resaltar objetivo y sus herramientas conectadas
+  function highlightNeighborhood(objNode) {
+    const neighbors = new Set([objNode.id]);
+    currentLinks.forEach((l) => {
+      if (l.source.id === objNode.id) neighbors.add(l.target.id);
+    });
+
+    nodeSel
+      .transition().duration(150)
+      .style("opacity", (d) => (neighbors.has(d.id) ? 1 : 0.15))
+      .attr("stroke-width", (d) => (d.id === objNode.id ? 3 : 1.5));
+
+    labelSel
+      .transition().duration(150)
+      .style("opacity", (d) => (neighbors.has(d.id) ? 1 : 0.15));
+
+    linkSel
+      .transition().duration(150)
+      .style("opacity", (d) => (d.source.id === objNode.id ? 1 : 0.1))
+      .attr("stroke", (d) => (d.source.id === objNode.id ? "#66b2ff" : "#666"))
+      .attr("stroke-width", (d) => (d.source.id === objNode.id ? 3 : 1.5));
+  }
+
+  // Quitar resaltado
+  function clearHighlight() {
+    nodeSel
+      .transition().duration(150)
+      .style("opacity", 1)
+      .attr("stroke-width", 1.5);
+
+    labelSel.transition().duration(150).style("opacity", 1);
+
+    linkSel
+      .transition().duration(150)
+      .style("opacity", 1)
+      .attr("stroke", "#aaa")
+      .attr("stroke-width", 2);
+  }
+
+  // Render inicial
   renderGraph();
 
-  // 🔁 NUEVO: Cargar filtros previos guardados en localStorage (desde tabla.html)
+  // Cargar filtro desde la tabla (si existe)
   const filtroDesdeTabla = localStorage.getItem("filtroDesdeTabla");
   if (filtroDesdeTabla) {
     const ids = JSON.parse(filtroDesdeTabla);
-    [...objetivoSelect.options].forEach(opt => {
-      if (ids.includes(opt.value)) {
-        opt.selected = true;
-      }
+    [...objetivoSelect.options].forEach((opt) => {
+      if (ids.includes(opt.value)) opt.selected = true;
     });
-    updateSelectedTags(); // Aplicar selección al grafo y chips
-    localStorage.removeItem("filtroDesdeTabla"); // Limpiar después de usar
+    updateSelectedTags();
+    localStorage.removeItem("filtroDesdeTabla");
   }
 
+  // Multi-selección tipo "toggle" en el select
   objetivoSelect.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;
@@ -142,9 +222,12 @@ d3.json("data/grafo.json").then((data) => {
     });
 
     const selectedValues = selectedOptions.map((opt) => opt.value);
+    // Re-render con filtro de objetivos (y quitar resaltado previo)
+    clearHighlight();
     renderGraph(selectedValues);
   }
 
+  // Eliminar chip
   selectedTagsContainer.addEventListener("click", (e) => {
     if (e.target.tagName === "SPAN") {
       const value = e.target.getAttribute("data-value");
@@ -156,12 +239,15 @@ d3.json("data/grafo.json").then((data) => {
     }
   });
 
+  // Reset: mostrar todo
   resetBtn.addEventListener("click", () => {
-    [...objetivoSelect.options].forEach(opt => opt.selected = false);
+    [...objetivoSelect.options].forEach((opt) => (opt.selected = false));
     selectedTagsContainer.innerHTML = "";
+    clearHighlight();
     renderGraph();
   });
 
+  // Drag helpers
   function drag(simulation) {
     return d3
       .drag()
@@ -181,6 +267,7 @@ d3.json("data/grafo.json").then((data) => {
       });
   }
 
+  // Panel lateral de info
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
       infoPanel.innerHTML = `
@@ -200,9 +287,9 @@ d3.json("data/grafo.json").then((data) => {
   }
 });
 
+// Ir a tabla con los objetivos seleccionados (botón)
 document.getElementById("verTablaBtn").addEventListener("click", () => {
-  const selectedValues = Array.from(objetivoSelect.selectedOptions).map(opt => opt.value);
-
+  const selectedValues = Array.from(objetivoSelect.selectedOptions).map((opt) => opt.value);
   if (selectedValues.length === 0) {
     window.location.href = "tabla.html";
   } else {
