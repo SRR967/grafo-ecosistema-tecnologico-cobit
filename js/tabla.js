@@ -43,6 +43,7 @@ function construirTabla(data) {
   const tbody = document.querySelector("#tabla-cobit tbody");
   tbody.innerHTML = "";
 
+  // Aplanar a filas
   const filas = [];
   data.forEach(objetivo => {
     objetivo.practicas.forEach(practica => {
@@ -51,7 +52,7 @@ function construirTabla(data) {
           objetivo: `${objetivo.id} - ${objetivo.nombre}`,
           practica: `${practica.id} - ${practica.nombre}`,
           actividad: `${actividad.id} - ${actividad.descripcion}`,
-          herramienta: actividad.herramienta || "-",
+          herramienta: normalizarHerramienta(actividad.herramienta),
           justificacion: actividad.justificacion || "-",
           observaciones: actividad.observaciones || "-",
           integracion: actividad.integracion || "-"
@@ -60,6 +61,10 @@ function construirTabla(data) {
     });
   });
 
+  // ⬅️ Resumen (total y por herramienta) con el conjunto filtrado completo (no paginado)
+  actualizarResumenDesdeFilas(filas);
+
+  // Paginación
   const inicio = (paginaActual - 1) * filasPorPagina;
   const fin = inicio + filasPorPagina;
   const filasPagina = filas.slice(inicio, fin);
@@ -81,6 +86,72 @@ function construirTabla(data) {
   actualizarControlesPaginacion(filas.length);
 }
 
+// Normaliza herramienta: N/A o vacío -> "-"
+function normalizarHerramienta(h) {
+  if (!h) return "-";
+  const t = String(h).trim();
+  if (t === "" || t.toLowerCase() === "n/a") return "-";
+  return t;
+}
+
+// Muestra chips de resumen antes de la tabla (total y por herramienta)
+function actualizarResumenDesdeFilas(filas) {
+  const wrap = document.getElementById("resumenResultados");
+  if (!wrap) return;
+
+  wrap.innerHTML = "";
+
+  // Contenedor visual
+  const bar = document.createElement("div");
+  bar.className = "summary-bar";
+
+  if (!filas || filas.length === 0) {
+    const msg = document.createElement("span");
+    msg.className = "summary-label";
+    msg.textContent = "No hay actividades para los filtros aplicados.";
+    bar.appendChild(msg);
+    wrap.appendChild(bar);
+    return;
+  }
+
+  // Total
+  const totalBadge = document.createElement("span");
+  totalBadge.className = "summary-badge";
+  totalBadge.textContent = `Total de actividades: ${filas.length}`;
+  bar.appendChild(totalBadge);
+
+  // Etiqueta
+  const lbl = document.createElement("span");
+  lbl.className = "summary-label";
+  lbl.textContent = "Por herramienta:";
+  bar.appendChild(lbl);
+
+  // Conteo por herramienta
+  const conteo = new Map();
+  for (const f of filas) {
+    const h = normalizarHerramienta(f.herramienta);
+    conteo.set(h, (conteo.get(h) || 0) + 1);
+  }
+
+  // Chips contenedor
+  const chips = document.createElement("div");
+  chips.className = "summary-chips";
+
+  // Orden: desc por cantidad, luego alfabético
+  [...conteo.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .forEach(([herr, cnt]) => {
+      const chip = document.createElement("span");
+      chip.className = "chip" + (herr === "-" ? " muted" : "");
+      chip.innerHTML = `${herr} <span class="count">${cnt}</span>`;
+      chips.appendChild(chip);
+    });
+
+  bar.appendChild(chips);
+  wrap.appendChild(bar);
+}
+
+
 function cargarFiltros(data) {
   const filtroObjetivo = document.getElementById("filtroObjetivo");
   const filtroHerramienta = document.getElementById("filtroHerramienta");
@@ -92,16 +163,13 @@ function cargarFiltros(data) {
     objetivosSet.add(`${obj.id} - ${obj.nombre}`);
     obj.practicas.forEach(practica =>
       practica.actividades.forEach(act => {
-        const h = (act.herramienta && act.herramienta.trim() !== "" && act.herramienta.trim().toLowerCase() !== "n/a")
-          ? act.herramienta.trim()
-          : "-";
-        herramientasSet.add(h);
+        herramientasSet.add(normalizarHerramienta(act.herramienta));
       })
     );
   });
 
   objetivosSet.forEach(o => filtroObjetivo.append(new Option(o, o)));
-  // Mantienes "Todas" del HTML y agregas las opciones reales:
+  // Mantienes "Todas" que ya tienes en el HTML, y agregas el resto:
   herramientasSet.forEach(h => filtroHerramienta.append(new Option(h, h)));
 
   document.getElementById("filtro").addEventListener("input", debounce(aplicarFiltros, 300));
@@ -113,7 +181,7 @@ function cargarFiltros(data) {
     construirTabla(filtrosActivos);
   });
 
-  // Selector múltiple tipo “toggle”
+  // Selector múltiple por "toggle" para Objetivos
   filtroObjetivo.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;
@@ -160,7 +228,7 @@ function aplicarFiltros() {
   construirTabla(filtrosActivos);
 }
 
-// 🔎 Buscador en TODOS los campos (objetivo, práctica, actividad, herramienta, justificación, observaciones, integración)
+// Buscador global en TODOS los campos
 function filtrarDatosActuales() {
   const texto = document.getElementById("filtro").value.trim().toLowerCase();
   const filtroObjetivoSelect = document.getElementById("filtroObjetivo");
@@ -180,9 +248,7 @@ function filtrarDatosActuales() {
 
           const actividadesFiltradas = pr.actividades.filter(act => {
             const actividadLabel = `${act.id} - ${act.descripcion || "-"}`.toLowerCase();
-            const herramienta = (act.herramienta && act.herramienta.trim() !== "" && act.herramienta.trim().toLowerCase() !== "n/a")
-              ? act.herramienta.trim().toLowerCase()
-              : "-";
+            const herramienta = normalizarHerramienta(act.herramienta).toLowerCase();
             const justificacion = (act.justificacion || "-").toLowerCase();
             const observaciones = (act.observaciones || "-").toLowerCase();
             const integracion = (act.integracion || "-").toLowerCase();

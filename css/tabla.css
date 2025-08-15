@@ -328,3 +328,73 @@ tbody tr:nth-child(even) {
   background: #4da6ff;
   border-radius: 6px;
 }
+
+/* ==== Resumen con chips (antes de la tabla) ==== */
+#resumenResultados {
+  max-width: 95%;
+  margin: 12px auto 0;
+}
+
+.summary-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.summary-badge {
+  background: #4da6ff;
+  color: #fff;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.summary-label {
+  color: #bbb;
+  font-size: 13px;
+}
+
+.summary-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2a2a2a;
+  color: #e6e6e6;
+  border: 1px solid #3a3a3a;
+  border-radius: 9999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 1;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.chip:hover {
+  border-color: #4da6ff;
+  box-shadow: 0 0 0 2px rgba(77,166,255,0.15);
+}
+
+.chip .count {
+  background: #4da6ff;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.chip.muted {
+  opacity: .75;
+}
