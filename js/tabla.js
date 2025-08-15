@@ -91,22 +91,29 @@ function cargarFiltros(data) {
   data.forEach(obj => {
     objetivosSet.add(`${obj.id} - ${obj.nombre}`);
     obj.practicas.forEach(practica =>
-      practica.actividades.forEach(act => herramientasSet.add(act.herramienta))
+      practica.actividades.forEach(act => {
+        const h = (act.herramienta && act.herramienta.trim() !== "" && act.herramienta.trim().toLowerCase() !== "n/a")
+          ? act.herramienta.trim()
+          : "-";
+        herramientasSet.add(h);
+      })
     );
   });
 
   objetivosSet.forEach(o => filtroObjetivo.append(new Option(o, o)));
+  // Mantienes "Todas" del HTML y agregas las opciones reales:
   herramientasSet.forEach(h => filtroHerramienta.append(new Option(h, h)));
 
   document.getElementById("filtro").addEventListener("input", debounce(aplicarFiltros, 300));
   filtroHerramienta.addEventListener("change", aplicarFiltros);
 
   document.getElementById("filasPorPagina").addEventListener("change", (e) => {
-    filasPorPagina = parseInt(e.target.value);
+    filasPorPagina = parseInt(e.target.value, 10);
     paginaActual = 1;
     construirTabla(filtrosActivos);
   });
 
+  // Selector múltiple tipo “toggle”
   filtroObjetivo.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;
@@ -123,7 +130,6 @@ function actualizarTagsObjetivos() {
   contenedor.innerHTML = "";
 
   const seleccionados = Array.from(filtroObjetivo.selectedOptions);
-
   if (seleccionados.length === 0) return;
 
   seleccionados.forEach(opt => {
@@ -133,8 +139,6 @@ function actualizarTagsObjetivos() {
     contenedor.appendChild(tag);
   });
 }
-
-
 
 document.getElementById("tagsObjetivos").addEventListener("click", (e) => {
   if (e.target.tagName === "SPAN") {
@@ -156,26 +160,53 @@ function aplicarFiltros() {
   construirTabla(filtrosActivos);
 }
 
+// 🔎 Buscador en TODOS los campos (objetivo, práctica, actividad, herramienta, justificación, observaciones, integración)
 function filtrarDatosActuales() {
-  const texto = document.getElementById("filtro").value.toLowerCase();
+  const texto = document.getElementById("filtro").value.trim().toLowerCase();
   const filtroObjetivoSelect = document.getElementById("filtroObjetivo");
   const objetivoSeleccionados = Array.from(filtroObjetivoSelect.selectedOptions).map(opt => opt.value.toLowerCase());
-  const herramientaFiltro = document.getElementById("filtroHerramienta").value.toLowerCase();
+  const herramientaFiltro = document.getElementById("filtroHerramienta").value.toLowerCase(); // "" (todas) o el valor
 
   return dataGlobal
     .map(obj => {
-      const objetivoNombre = `${obj.id} - ${obj.nombre}`.toLowerCase();
-      if (objetivoSeleccionados.length > 0 && !objetivoSeleccionados.includes(objetivoNombre)) {
+      const objetivoLabel = `${obj.id} - ${obj.nombre}`.toLowerCase();
+      if (objetivoSeleccionados.length > 0 && !objetivoSeleccionados.includes(objetivoLabel)) {
         return null;
       }
 
-      const practicasFiltradas = obj.practicas.map(pr => ({
-        ...pr,
-        actividades: pr.actividades.filter(act =>
-          (texto === "" || (act.descripcion + act.herramienta).toLowerCase().includes(texto)) &&
-          (herramientaFiltro === "" || act.herramienta.toLowerCase() === herramientaFiltro)
-        )
-      })).filter(pr => pr.actividades.length > 0);
+      const practicasFiltradas = obj.practicas
+        .map(pr => {
+          const practicaLabel = `${pr.id} - ${pr.nombre}`.toLowerCase();
+
+          const actividadesFiltradas = pr.actividades.filter(act => {
+            const actividadLabel = `${act.id} - ${act.descripcion || "-"}`.toLowerCase();
+            const herramienta = (act.herramienta && act.herramienta.trim() !== "" && act.herramienta.trim().toLowerCase() !== "n/a")
+              ? act.herramienta.trim().toLowerCase()
+              : "-";
+            const justificacion = (act.justificacion || "-").toLowerCase();
+            const observaciones = (act.observaciones || "-").toLowerCase();
+            const integracion = (act.integracion || "-").toLowerCase();
+
+            // buscador global
+            const haystack = [
+              objetivoLabel,
+              practicaLabel,
+              actividadLabel,
+              herramienta,
+              justificacion,
+              observaciones,
+              integracion
+            ].join(" ");
+
+            const coincideTexto = texto === "" || haystack.includes(texto);
+            const coincideHerramienta = herramientaFiltro === "" || herramienta === herramientaFiltro;
+
+            return coincideTexto && coincideHerramienta;
+          });
+
+          return actividadesFiltradas.length > 0 ? { ...pr, actividades: actividadesFiltradas } : null;
+        })
+        .filter(Boolean);
 
       return practicasFiltradas.length > 0 ? { ...obj, practicas: practicasFiltradas } : null;
     })
@@ -186,7 +217,7 @@ function actualizarControlesPaginacion(totalFilas) {
   const controles = document.getElementById("paginacion");
   controles.innerHTML = "";
 
-  const totalPaginas = Math.ceil(totalFilas / filasPorPagina);
+  const totalPaginas = Math.ceil(totalFilas / filasPorPagina) || 1;
 
   const btnPrev = document.createElement("button");
   btnPrev.textContent = "⬅ Anterior";
