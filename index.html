@@ -30,7 +30,7 @@
       </div>
       <div class="button-group">
         <button id="resetBtn">Mostrar todos</button>
-        <button id="verTablaBtn">Ver tabla filtrada</button>
+        <button id="verTablaBtn">Mas detalles</button>
       </div>
 
     </aside>
@@ -40,11 +40,18 @@
       <svg></svg>
     </div>
 
-    <!-- Panel de información a la derecha -->
-    <div id="infoPanel">
-      <h2>Selecciona un nodo</h2>
-      <p>Aquí aparecerá información detallada del nodo.</p>
+    <!-- Panel de información a la derecha (drawer) -->
+    <div id="infoPanel" class="drawer">
+      <button id="closeInfo" class="drawer-close" aria-label="Cerrar panel">×</button>
+    <div id="infoContent">
+    <h2>Selecciona un nodo</h2>
+    <p>Aquí aparecerá información detallada del nodo.</p>
     </div>
+</div>
+
+<!-- Capa oscura para cerrar al hacer clic fuera -->
+<div id="infoOverlay" class="drawer-overlay"></div>
+
   </main>
 
   <footer>

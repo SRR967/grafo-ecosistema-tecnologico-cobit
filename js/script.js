@@ -1,34 +1,68 @@
-// js/script.js
+// ================== Referencias base ==================
 const svg = d3.select("svg");
+const infoPanelEl = document.getElementById("infoPanel");
+const infoContentEl = document.getElementById("infoContent");
+const infoOverlayEl = document.getElementById("infoOverlay");
+const closeInfoBtn = document.getElementById("closeInfo");
 
-const infoPanel = document.getElementById("infoPanel");
+const infoPanel = document.getElementById("infoPanel"); // legacy alias (no usado directamente)
 const objetivoSelect = document.getElementById("objetivoSelect");
 const selectedTagsContainer = document.getElementById("selected-tags");
 const resetBtn = document.getElementById("resetBtn");
-const width = window.innerWidth - 300; // restar el panel izquierdo
+
+const width = window.innerWidth - 300; // 300 = ancho del panel izquierdo
 const height = window.innerHeight;
 
+// ================== Drawer helpers ==================
+function openInfoPanel() {
+  infoPanelEl.classList.remove("closing");  // por si quedó en cierre
+  infoPanelEl.classList.add("open");
+  infoOverlayEl.classList.add("visible");
+}
+
+function closeInfoPanel() {
+  // iniciar animación de salida
+  infoPanelEl.classList.add("closing");
+  infoOverlayEl.classList.remove("visible");
+
+  // esperar fin de la transición para limpiar clases
+  const onEnd = (e) => {
+    // nos interesa cuando termina transform u opacity
+    if (e.propertyName !== "transform" && e.propertyName !== "opacity") return;
+    infoPanelEl.classList.remove("open", "closing");
+    infoPanelEl.removeEventListener("transitionend", onEnd);
+  };
+  infoPanelEl.addEventListener("transitionend", onEnd);
+}
+
+// Cerrar drawer: overlay, botón ✕, tecla Esc
+infoOverlayEl.addEventListener("click", closeInfoPanel);
+closeInfoBtn.addEventListener("click", closeInfoPanel);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeInfoPanel();
+});
+
+// ================== Zoom & contenedor ==================
 const container = svg.append("g");
 
-// Zoom & pan
+// Desactivar el zoom por doble clic (para usar dblclick propio)
+svg.on("dblclick.zoom", null);
+
+// Zoom con rueda/arrastre
 svg.call(
   d3.zoom()
     .scaleExtent([0.1, 3])
     .on("zoom", (event) => container.attr("transform", event.transform))
 );
-// Permitir usar dblclick en nodos (desactivar zoom por dblclick)
-svg.on("dblclick.zoom", null);
 
-// Variables de estado del grafo actual para resaltar
-let nodeSel, linkSel, labelSel;
-let currentNodes = [];
-let currentLinks = [];
 
+
+// ================== Carga de datos y render ==================
 d3.json("data/grafo.json").then((data) => {
   const allNodes = data.nodes;
-  const allLinks = data.links;
+  const allLinks = data.links; // {source: objetivoId, target: herramientaId}
 
-  // Llenar selector de objetivos
+  // Poblar selector de objetivos
   const objetivos = allNodes.filter((d) => d.tipo === "objetivo");
   objetivos.forEach((obj) => {
     const option = document.createElement("option");
@@ -37,8 +71,15 @@ d3.json("data/grafo.json").then((data) => {
     objetivoSelect.appendChild(option);
   });
 
+  // Estado para resaltado
+  let currentFocusId = null;
+  let nodeSel = null;
+  let linkSel = null;
+
+  // Render principal (opcionalmente filtrado por objetivos seleccionados)
   function renderGraph(filteredObjetivos = []) {
     container.selectAll("*").remove();
+    currentFocusId = null; // limpiar resaltado al re-render
 
     let nodesToShow = [];
     let linksToShow = [];
@@ -69,13 +110,9 @@ d3.json("data/grafo.json").then((data) => {
       });
     }
 
-    // Eliminar nodos duplicados
+    // Quitar duplicados
     nodesToShow = Array.from(new Map(nodesToShow.map((n) => [n.id, n])).values());
 
-    currentNodes = nodesToShow;
-    currentLinks = linksToShow;
-
-    // Simulación
     const simulation = d3
       .forceSimulation(nodesToShow)
       .force("link", d3.forceLink(linksToShow).distance(150))
@@ -85,13 +122,12 @@ d3.json("data/grafo.json").then((data) => {
     // Enlaces
     linkSel = container
       .append("g")
-      .attr("stroke", "#aaa")
+      .attr("stroke", "#e0d7d7ff")
       .selectAll("line")
       .data(linksToShow)
       .enter()
       .append("line")
-      .attr("stroke-width", 2)
-      .style("opacity", 1);
+      .attr("stroke-width", 2);
 
     // Nodos
     nodeSel = container
@@ -101,22 +137,15 @@ d3.json("data/grafo.json").then((data) => {
       .enter()
       .append("circle")
       .attr("r", 15)
-      .attr("fill", (d) => (d.tipo === "objetivo" ? "#4da6ff" : "#00c853"))
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1.5)
-      .style("cursor", "pointer")
+      .attr("fill", (d) => (d.tipo === "objetivo" ? "#043c7c" : "#00c853")) // azul objetivos, verde herramientas
       .call(drag(simulation))
       .on("click", (event, d) => {
-        mostrarInfo(d);
-        if (d.tipo === "objetivo") {
-          highlightNeighborhood(d);
-        } else {
-          clearHighlight(); // si clic en herramienta, quita el resaltado
-          mostrarInfo(d);
-        }
+        mostrarInfo(d);        // abrir drawer con información
+        toggleHighlight(d);    // resaltar conexiones
+        event.stopPropagation();
       })
       .on("dblclick", (event, d) => {
-        // Doble clic: ir a tabla filtrada si es objetivo
+        // Abrir tabla con filtro al hacer doble clic en objetivos
         if (d.tipo === "objetivo") {
           localStorage.setItem("filtroObjetivos", JSON.stringify([d.id]));
           window.location.href = "tabla.html";
@@ -124,8 +153,8 @@ d3.json("data/grafo.json").then((data) => {
         event.stopPropagation();
       });
 
-    // Etiquetas
-    labelSel = container
+    // Labels
+    const label = container
       .append("g")
       .selectAll("text")
       .data(nodesToShow)
@@ -134,9 +163,9 @@ d3.json("data/grafo.json").then((data) => {
       .text((d) => d.id)
       .attr("text-anchor", "middle")
       .attr("dy", -25)
-      .attr("fill", "white");
+      .style("pointer-events", "none");
 
-    // Tick
+    // Simulación
     simulation.on("tick", () => {
       linkSel
         .attr("x1", (d) => d.source.x)
@@ -145,67 +174,28 @@ d3.json("data/grafo.json").then((data) => {
         .attr("y2", (d) => d.target.y);
 
       nodeSel.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-      labelSel.attr("x", (d) => d.x).attr("y", (d) => d.y);
+      label.attr("x", (d) => d.x).attr("y", (d) => d.y);
     });
   }
 
-  // Resaltar objetivo y sus herramientas conectadas
-  function highlightNeighborhood(objNode) {
-    const neighbors = new Set([objNode.id]);
-    currentLinks.forEach((l) => {
-      if (l.source.id === objNode.id) neighbors.add(l.target.id);
-    });
-
-    nodeSel
-      .transition().duration(150)
-      .style("opacity", (d) => (neighbors.has(d.id) ? 1 : 0.15))
-      .attr("stroke-width", (d) => (d.id === objNode.id ? 3 : 1.5));
-
-    labelSel
-      .transition().duration(150)
-      .style("opacity", (d) => (neighbors.has(d.id) ? 1 : 0.15));
-
-    linkSel
-      .transition().duration(150)
-      .style("opacity", (d) => (d.source.id === objNode.id ? 1 : 0.1))
-      .attr("stroke", (d) => (d.source.id === objNode.id ? "#66b2ff" : "#666"))
-      .attr("stroke-width", (d) => (d.source.id === objNode.id ? 3 : 1.5));
-  }
-
-  // Quitar resaltado
-  function clearHighlight() {
-    nodeSel
-      .transition().duration(150)
-      .style("opacity", 1)
-      .attr("stroke-width", 1.5);
-
-    labelSel.transition().duration(150).style("opacity", 1);
-
-    linkSel
-      .transition().duration(150)
-      .style("opacity", 1)
-      .attr("stroke", "#aaa")
-      .attr("stroke-width", 2);
-  }
-
-  // Render inicial
   renderGraph();
 
-  // Cargar filtro desde la tabla (si existe)
+  // ============ Persistencia desde tabla -> grafo ============
   const filtroDesdeTabla = localStorage.getItem("filtroDesdeTabla");
   if (filtroDesdeTabla) {
     const ids = JSON.parse(filtroDesdeTabla);
     [...objetivoSelect.options].forEach((opt) => {
       if (ids.includes(opt.value)) opt.selected = true;
     });
-    updateSelectedTags();
+    updateSelectedTags(); // aplica al grafo y chips
     localStorage.removeItem("filtroDesdeTabla");
   }
 
-  // Multi-selección tipo "toggle" en el select
+  // ============ Selector múltiple con chips ============
   objetivoSelect.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const option = e.target;
+    if (!option || option.tagName !== "OPTION") return;
     option.selected = !option.selected;
     updateSelectedTags();
   });
@@ -222,12 +212,9 @@ d3.json("data/grafo.json").then((data) => {
     });
 
     const selectedValues = selectedOptions.map((opt) => opt.value);
-    // Re-render con filtro de objetivos (y quitar resaltado previo)
-    clearHighlight();
     renderGraph(selectedValues);
   }
 
-  // Eliminar chip
   selectedTagsContainer.addEventListener("click", (e) => {
     if (e.target.tagName === "SPAN") {
       const value = e.target.getAttribute("data-value");
@@ -239,15 +226,15 @@ d3.json("data/grafo.json").then((data) => {
     }
   });
 
-  // Reset: mostrar todo
   resetBtn.addEventListener("click", () => {
     [...objetivoSelect.options].forEach((opt) => (opt.selected = false));
     selectedTagsContainer.innerHTML = "";
-    clearHighlight();
     renderGraph();
+    clearHighlight();
+    closeInfoPanel();
   });
 
-  // Drag helpers
+  // ============ Drag helper ============
   function drag(simulation) {
     return d3
       .drag()
@@ -267,29 +254,84 @@ d3.json("data/grafo.json").then((data) => {
       });
   }
 
-  // Panel lateral de info
+  // ============ Mostrar info en drawer ============
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
-      infoPanel.innerHTML = `
+      infoContentEl.innerHTML = `
         <h2>${d.id} - ${d.nombre}</h2>
-        <p><strong>Descripción:</strong> ${d.descripcion}</p>
-        <p><strong>Propósito:</strong> ${d.proposito || "No especificado"}</p>
+        <p><strong>Descripción:</strong> ${d.descripcion || "-"}</p>
+        <p><strong>Propósito:</strong> ${d.proposito || "-"}</p>
         <h3>Herramientas asociadas:</h3>
-        <ul>${d.herramientas ? d.herramientas.map((h) => `<li>${h}</li>`).join("") : "<li>No definidas</li>"}</ul>`;
+        <ul>${d.herramientas ? d.herramientas.map((h) => `<li>${h}</li>`).join("") : "<li>-</li>"}</ul>
+      `;
     } else if (d.tipo === "herramienta") {
-      infoPanel.innerHTML = `
+      infoContentEl.innerHTML = `
         <h2>${d.id}</h2>
-        <p><strong>Categoría:</strong> ${d.categoria}</p>
-        <p>${d.descripcion}</p>
+        <p><strong>Categoría:</strong> ${d.categoria || "-"}</p>
+        <p>${d.descripcion || "-"}</p>
         <h3>Casos de uso:</h3>
-        <ul>${d.casos_uso ? d.casos_uso.map((c) => `<li>${c}</li>`).join("") : "<li>No especificados</li>"}</ul>`;
+        <ul>${d.casos_uso ? d.casos_uso.map((c) => `<li>${c}</li>`).join("") : "<li>-</li>"}</ul>
+      `;
+    }
+    openInfoPanel();
+  }
+
+  // ============ Resaltado de foco ============
+  function clearHighlight() {
+    if (!nodeSel || !linkSel) return;
+    currentFocusId = null;
+    nodeSel.attr("opacity", 1);
+    linkSel.attr("opacity", 1).attr("stroke", "#aaa").attr("stroke-width", 2);
+  }
+
+  function setHighlight(focusId) {
+    if (!nodeSel || !linkSel) return;
+
+    // Construir conjunto de conectados (ambos sentidos)
+    const connected = new Set([focusId]);
+    allLinks.forEach((l) => {
+      if (l.source === focusId) connected.add(l.target);
+      if (l.target === focusId) connected.add(l.source);
+    });
+
+    nodeSel.attr("opacity", (n) => (connected.has(n.id) ? 1 : 0.15));
+
+    linkSel
+      .attr("opacity", (l) =>
+        l.source.id === focusId || l.target.id === focusId ? 1 : 0.15
+      )
+      .attr("stroke", (l) =>
+        l.source.id === focusId || l.target.id === focusId ? "#aaa" : "#aaa"
+      )
+      .attr("stroke-width", (l) =>
+        l.source.id === focusId || l.target.id === focusId ? 3 : 2
+      );
+  }
+
+  function toggleHighlight(d) {
+    if (currentFocusId === d.id) {
+      clearHighlight();
+    } else {
+      currentFocusId = d.id;
+      setHighlight(currentFocusId);
     }
   }
+    // Click en fondo del SVG: cerrar panel y quitar resaltado
+    svg.on("click", (event) => {
+    if (event.target.tagName.toLowerCase() === "svg") {
+      closeInfoPanel();
+      clearHighlight();
+    }
 });
 
-// Ir a tabla con los objetivos seleccionados (botón)
+
+});
+
+// ============ Botón "Ver tabla" (llevar filtros seleccionados) ============
 document.getElementById("verTablaBtn").addEventListener("click", () => {
-  const selectedValues = Array.from(objetivoSelect.selectedOptions).map((opt) => opt.value);
+  const selectedValues = Array.from(document.getElementById("objetivoSelect").selectedOptions).map(
+    (opt) => opt.value
+  );
   if (selectedValues.length === 0) {
     window.location.href = "tabla.html";
   } else {
