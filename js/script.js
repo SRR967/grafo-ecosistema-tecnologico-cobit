@@ -1,29 +1,29 @@
 // ================== Referencias base ==================
 const svg = d3.select("svg");
-const infoPanelEl = document.getElementById("infoPanel");
+const infoPanelEl   = document.getElementById("infoPanel");
 const infoContentEl = document.getElementById("infoContent");
 const infoOverlayEl = document.getElementById("infoOverlay");
-const closeInfoBtn = document.getElementById("closeInfo");
+const closeInfoBtn  = document.getElementById("closeInfo");
 
-const objetivoSelect = document.getElementById("objetivoSelect");
+const objetivoSelect        = document.getElementById("objetivoSelect");
 const selectedTagsContainer = document.getElementById("selected-tags");
-const resetBtn = document.getElementById("resetBtn");
+const resetBtn              = document.getElementById("resetBtn");
 
-const width = window.innerWidth - 300; // 300 = ancho del panel izquierdo
+const width  = window.innerWidth - 300; // 300 = ancho del panel izquierdo
 const height = window.innerHeight;
 
 // ================== Config visual (ajustable) ==================
-const R_OBJ   = 18;                // radio fijo de objetivos (azules)
-const TOOL_MIN = 18;               // ⬅️ mínimo más grande (antes 12)
-const TOOL_MAX = 40;               // rango superior un poco mayor para más contraste
-const TOOL_EXP = 1.25;             // curva potenciada (1.25 = contraste suave pero notorio)
-const LINK_BASE = 120;             // distancia base de enlaces
+const R_OBJ    = 16;    // radio fijo de objetivos (azules)
+const TOOL_MIN = 14;    // mínimo de herramientas (más grande para base)
+const TOOL_MAX = 40;    // máximo de herramientas
+const TOOL_EXP = 1.25;  // curva de escala (contraste)
+const LINK_BASE = 120;  // distancia base de enlaces
 
 // ================== Estado global ==================
 let currentFocusId = null;
-let nodeSel = null;
+let nodeSel = null;   // <g.node>
 let linkSel = null;
-let labelSel = null;  // 👈 NUEVO: referencia global a labels
+let labelSel = null;  // <text>
 
 // Click vs doble click
 let clickTimer = null;
@@ -58,12 +58,23 @@ svg.call(
   d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => container.attr("transform", event.transform))
 );
 
-// 👇 NUEVO: filtro de blur para labels fuera de foco
-const defs = svg.append("defs");
-defs.append("filter")
+// ---- defs globales: blur y clip circular para imágenes ----
+const rootDefs = svg.append("defs");
+
+// Blur suave para labels fuera de foco
+rootDefs.append("filter")
   .attr("id", "softBlur")
   .append("feGaussianBlur")
   .attr("stdDeviation", 1.6);
+
+// Clip circular relativo al bbox del elemento (sirve para TODAS las imágenes)
+const circleClip = rootDefs.append("clipPath")
+  .attr("id", "nodeCircleClip")
+  .attr("clipPathUnits", "objectBoundingBox");
+circleClip.append("circle")
+  .attr("cx", 0.5)
+  .attr("cy", 0.5)
+  .attr("r", 0.5);
 
 // Clic en fondo del SVG: cerrar panel y quitar resaltado
 svg.on("click", (event) => {
@@ -73,13 +84,58 @@ svg.on("click", (event) => {
   }
 });
 
-// ================== Util: limpiar resaltado ==================
+// ================== Utilidades ==================
+// Slug para nombres de archivos
+function slugify(name) {
+  return name
+    .normalize?.("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/[\/\\]/g, "-")
+    .replace(/[^a-z0-9._ -]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+// Rutas candidatas para imagen de herramienta en /img
+function buildIconCandidates(node) {
+  const baseNames = [];
+  const idRaw   = String(node.id || "").trim();
+  const nameRaw = String(node.nombre || "").trim();
+
+  [idRaw, nameRaw].forEach((base) => {
+    if (!base) return;
+    const uniq = new Set();
+    const variants = [
+      base,
+      base.replace(/\s+/g, "_"),
+      base.replace(/\s+/g, "-"),
+      slugify(base),
+    ];
+    variants.forEach(v => { if (v && !uniq.has(v)) { uniq.add(v); baseNames.push(v); } });
+  });
+
+  const exts = [".png", ".svg", ".jpg", ".jpeg", ".webp"];
+  const candidates = [];
+  baseNames.forEach(b => exts.forEach(ext => candidates.push(`img/${b}${ext}`)));
+  return Array.from(new Set(candidates));
+}
+
+// Drag para <g.node>
+function drag(simulation) {
+  return d3.drag()
+    .on("start", (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on("drag",  (event, d) => { d.fx = event.x; d.fy = event.y; })
+    .on("end",   (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; });
+}
+
+// ================== Limpiar resaltado ==================
 function clearHighlight() {
   if (!nodeSel || !linkSel) return;
   currentFocusId = null;
-  nodeSel.attr("opacity", 1);
+  nodeSel.attr("opacity", 1).style("filter", null);
   linkSel.attr("opacity", 1).attr("stroke", "#aaa").attr("stroke-width", 2);
-  // 👇 NUEVO: resetear labels
   if (labelSel) labelSel.attr("opacity", 1).attr("filter", null);
 }
 
@@ -91,7 +147,7 @@ d3.json("data/grafo.json").then((data) => {
   // --------- Grados globales de herramientas ---------
   const toolDegree = {};
   allLinks.forEach((l) => { toolDegree[l.target] = (toolDegree[l.target] || 0) + 1; });
-  const toolMax = d3.max(Object.values(toolDegree)) || 1;
+  const toolMax   = d3.max(Object.values(toolDegree)) || 1;
   const toolScale = d3.scalePow().exponent(TOOL_EXP).domain([1, toolMax]).range([TOOL_MIN, TOOL_MAX]);
 
   function getRadius(d) {
@@ -157,17 +213,15 @@ d3.json("data/grafo.json").then((data) => {
       .append("line")
       .attr("stroke-width", 2);
 
-    // Nodos
+    // ===== Nodos como grupos <g> =====
     nodeSel = container
       .append("g")
-      .selectAll("circle")
+      .attr("class", "nodes")
+      .selectAll("g.node")
       .data(nodesToShow)
       .enter()
-      .append("circle")
-      .attr("r", d => getRadius(d))
-      .attr("fill", d => (d.tipo === "objetivo" ? "#043c7c" : "#00c853")) // azul objetivos, verde herramientas
-      .attr("stroke", "#e9e9e9")
-      .attr("stroke-width", d => getStrokeWidth(d))
+      .append("g")
+      .attr("class", "node")
       .call(drag(simulation))
       .on("click", (event, d) => {
         if (clickTimer) clearTimeout(clickTimer);
@@ -189,7 +243,53 @@ d3.json("data/grafo.json").then((data) => {
         event.preventDefault();
       });
 
-    // Labels (posición + tamaño según radio)  👇 GUARDAMOS EN labelSel
+    // 1) Fondo (círculo de color) — siempre
+    nodeSel.append("circle")
+      .attr("class", "bg")
+      .attr("r", d => getRadius(d))
+      .attr("fill", d => (d.tipo === "objetivo" ? "#043c7c" : "#00c853"));
+
+    // 2) Imagen recortada (solo herramientas) con clip circular común
+    nodeSel.each(function(d) {
+      if (d.tipo !== "herramienta") return;
+
+      const g = d3.select(this);
+      const r = getRadius(d);
+      const candidates = buildIconCandidates(d);
+      if (!candidates.length) return;
+
+      const img = g.append("image")
+        .attr("class", "tool-image")
+        .attr("width",  2 * r)
+        .attr("height", 2 * r)
+        .attr("x", -r)
+        .attr("y", -r)
+        .attr("clip-path", "url(#nodeCircleClip)")
+        .attr("preserveAspectRatio", "xMidYMid slice") // rellena sin distorsionar
+        .attr("href", candidates[0])
+        .attr("data-try", 0);
+
+      img.on("error", function() {
+        const el = d3.select(this);
+        let i = +el.attr("data-try");
+        i++;
+        if (i < candidates.length) {
+          el.attr("href", candidates[i]).attr("data-try", i);
+        } else {
+          el.remove(); // fallback: solo círculo
+        }
+      });
+    });
+
+    // 3) Anillo/borde — siempre, por encima
+    nodeSel.append("circle")
+      .attr("class", "ring")
+      .attr("r", d => getRadius(d))
+      .attr("fill", "none")
+      .attr("stroke", "#e9e9e9")
+      .attr("stroke-width", d => getStrokeWidth(d));
+
+    // Labels
     labelSel = container
       .append("g")
       .selectAll("text")
@@ -208,7 +308,8 @@ d3.json("data/grafo.json").then((data) => {
         .attr("y1", d => d.source.y)
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
-      nodeSel.attr("cx", d => d.x).attr("cy", d => d.y);
+
+      nodeSel.attr("transform", d => `translate(${d.x},${d.y})`);
       labelSel.attr("x", d => d.x).attr("y", d => d.y);
     });
   }
@@ -263,14 +364,6 @@ d3.json("data/grafo.json").then((data) => {
     closeInfoPanel();
   });
 
-  // ===== Drag helper =====
-  function drag(simulation) {
-    return d3.drag()
-      .on("start", (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
-      .on("drag",  (event, d) => { d.fx = event.x; d.fy = event.y; })
-      .on("end",   (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; });
-  }
-
   // ===== Drawer info =====
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
@@ -302,21 +395,21 @@ d3.json("data/grafo.json").then((data) => {
       if (l.target === focusId) connected.add(l.source);
     });
 
-    nodeSel.attr("opacity", n => (connected.has(n.id) ? 1 : 0.15));
+    nodeSel
+      .attr("opacity", n => (connected.has(n.id) ? 1 : 0.15))
+      .style("filter", n => (connected.has(n.id) ? null : "blur(1px)"));
 
     linkSel
       .attr("opacity", l => (l.source.id === focusId || l.target.id === focusId ? 1 : 0.15))
-      .attr("stroke", l => (l.source.id === focusId || l.target.id === focusId ? "#aaa" : "#aaa"))
+      .attr("stroke",  l => (l.source.id === focusId || l.target.id === focusId ? "#aaa" : "#aaa"))
       .attr("stroke-width", l => (l.source.id === focusId || l.target.id === focusId ? 3 : 2));
 
-    // 👇 NUEVO: labels con opacidad y blur
     if (labelSel) {
       labelSel
         .attr("opacity", n => (connected.has(n.id) ? 1 : 0.25))
-        .attr("filter", n => (connected.has(n.id) ? null : "url(#softBlur)"));
+        .attr("filter",  n => (connected.has(n.id) ? null : "url(#softBlur)"));
     }
   }
-
   function toggleHighlight(d) {
     if (currentFocusId === d.id) clearHighlight();
     else { currentFocusId = d.id; setHighlight(currentFocusId); }
