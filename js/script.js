@@ -14,7 +14,7 @@ const height = window.innerHeight;
 
 // ================== Config visual (ajustable) ==================
 const R_OBJ    = 16;    // radio fijo de objetivos (azules)
-const TOOL_MIN = 14;    // mínimo de herramientas (más grande para base)
+const TOOL_MIN = 14;    // mínimo de herramientas
 const TOOL_MAX = 40;    // máximo de herramientas
 const TOOL_EXP = 1.25;  // curva de escala (contraste)
 const LINK_BASE = 120;  // distancia base de enlaces
@@ -144,6 +144,16 @@ d3.json("data/grafo.json").then((data) => {
   const allNodes = data.nodes;
   const allLinks = data.links; // {source: objetivoId, target: herramientaId}
 
+  // ------- Datos del Excel (si existen) -------
+  const userRefsRaw  = JSON.parse(localStorage.getItem('userRefs') || "[]");    // ej: ["EDM01","APO02"]
+  const maturityMap  = JSON.parse(localStorage.getItem('maturityMap') || "{}"); // ej: {EDM01:"3", APO02:"2"}
+
+  // Objetivos disponibles en el grafo
+  const objetivosAll = allNodes.filter(d => d.tipo === "objetivo");
+  const allowedRefs  = Array.isArray(userRefsRaw) && userRefsRaw.length
+    ? userRefsRaw.filter(id => objetivosAll.some(o => o.id === id))
+    : []; // si vacío => no hay Excel o no coincide nada; se muestran todos como antes
+
   // --------- Grados globales de herramientas ---------
   const toolDegree = {};
   allLinks.forEach((l) => { toolDegree[l.target] = (toolDegree[l.target] || 0) + 1; });
@@ -159,8 +169,13 @@ d3.json("data/grafo.json").then((data) => {
     return 1 + ((r - TOOL_MIN) / (TOOL_MAX - TOOL_MIN)) * 2; // 1 → 3
   }
 
-  // Poblar selector de objetivos
-  allNodes.filter(d => d.tipo === "objetivo").forEach((obj) => {
+  // ---------- Poblar selector (limitado por Excel si aplica) ----------
+  objetivoSelect.innerHTML = "";
+  const objetivosList = allowedRefs.length
+    ? objetivosAll.filter(o => allowedRefs.includes(o.id))
+    : objetivosAll;
+
+  objetivosList.forEach((obj) => {
     const option = document.createElement("option");
     option.value = obj.id;
     option.textContent = `${obj.id} - ${obj.nombre}`;
@@ -174,9 +189,21 @@ d3.json("data/grafo.json").then((data) => {
     let nodesToShow = [];
     let linksToShow = [];
 
-    if (filteredObjetivos.length > 0) {
-      const set = new Set(filteredObjetivos);
-      nodesToShow.push(...allNodes.filter(n => n.tipo === "objetivo" && set.has(n.id)));
+    // Si hay Excel: graficar SOLO allowedRefs (o su intersección con lo seleccionado)
+    if (allowedRefs.length) {
+      const baseRefs = filteredObjetivos.length
+        ? Array.from(new Set(filteredObjetivos.filter(id => allowedRefs.includes(id))))
+        : allowedRefs.slice();
+
+      const set = new Set(baseRefs);
+
+      // Objetivos permitidos + inyectar madurez
+      const objetivosKept = allNodes.filter(n => n.tipo === "objetivo" && set.has(n.id));
+      objetivosKept.forEach(n => { n.madurez = maturityMap[n.id] ?? n.madurez ?? ""; });
+
+      nodesToShow.push(...objetivosKept);
+
+      // Enlaces/herramientas conectadas a esos objetivos
       allLinks.forEach((l) => {
         if (set.has(l.source)) {
           const o = allNodes.find(n => n.id === l.source);
@@ -188,12 +215,14 @@ d3.json("data/grafo.json").then((data) => {
         }
       });
     } else {
+      // Sin Excel: comportamiento original
       nodesToShow = [...allNodes];
       linksToShow = allLinks.map(l => ({
         source: allNodes.find(n => n.id === l.source),
         target: allNodes.find(n => n.id === l.target),
       }));
     }
+
     nodesToShow = Array.from(new Map(nodesToShow.map(n => [n.id, n])).values());
 
     const simulation = d3
@@ -265,7 +294,7 @@ d3.json("data/grafo.json").then((data) => {
         .attr("x", -r)
         .attr("y", -r)
         .attr("clip-path", "url(#nodeCircleClip)")
-        .attr("preserveAspectRatio", "xMidYMid slice") // rellena sin distorsionar
+        .attr("preserveAspectRatio", "xMidYMid slice")
         .attr("href", candidates[0])
         .attr("data-try", 0);
 
@@ -314,13 +343,17 @@ d3.json("data/grafo.json").then((data) => {
     });
   }
 
-  renderGraph();
+  // Render inicial
+  // - Con Excel: muestra SOLO los objetivos de allowedRefs (sin necesidad de preseleccionar chips)
+  // - Sin Excel: comportamiento original (todos)
+  renderGraph([]);
 
   // ===== Persistencia desde tabla -> grafo =====
   const filtroDesdeTabla = localStorage.getItem("filtroDesdeTabla");
   if (filtroDesdeTabla) {
     const ids = JSON.parse(filtroDesdeTabla);
-    [...objetivoSelect.options].forEach(opt => { if (ids.includes(opt.value)) opt.selected = true; });
+    const base = allowedRefs.length ? ids.filter(id => allowedRefs.includes(id)) : ids;
+    [...objetivoSelect.options].forEach(opt => { opt.selected = base.includes(opt.value); });
     updateSelectedTags();
     localStorage.removeItem("filtroDesdeTabla");
   }
@@ -359,7 +392,7 @@ d3.json("data/grafo.json").then((data) => {
   resetBtn.addEventListener("click", () => {
     [...objetivoSelect.options].forEach((opt) => (opt.selected = false));
     selectedTagsContainer.innerHTML = "";
-    renderGraph();
+    renderGraph([]); // con Excel: vuelve a mostrar todas las refs del Excel
     clearHighlight();
     closeInfoPanel();
   });
@@ -367,8 +400,10 @@ d3.json("data/grafo.json").then((data) => {
   // ===== Drawer info =====
   function mostrarInfo(d) {
     if (d.tipo === "objetivo") {
+      const mad = d.madurez ?? (maturityMap[d.id] || "-");
       infoContentEl.innerHTML = `
         <h2>${d.id} - ${d.nombre}</h2>
+        <p><strong>Nivel de madurez (Excel):</strong> ${mad || "-"}</p>
         <p><strong>Descripción:</strong> ${d.descripcion || "-"}</p>
         <p><strong>Propósito:</strong> ${d.proposito || "-"}</p>
         <h3>Herramientas asociadas:</h3>
