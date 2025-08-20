@@ -288,3 +288,18 @@ text { fill: var(--c-text); font-size: 12px; pointer-events: none; }
   transform: translateX(16px); /* leve empuje antes de irse */
   opacity: 0;
 }
+/* Cursor de mano para cualquier nodo (objetivos y herramientas) */
+.nodes .node { 
+  cursor: pointer;
+}
+
+/* Asegurar que la imagen recibe eventos y no “mata” el cursor */
+.nodes .node image,
+.nodes .node circle {
+  pointer-events: auto;
+}
+
+/* Los labels no deben interferir con el hover/click */
+text { 
+  pointer-events: none; 
+}
