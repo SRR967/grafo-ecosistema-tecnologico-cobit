@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Selecciona tu hoja de ruta</title>
+  <link rel="stylesheet" href="css/ecosistema.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Selecciona tu hoja de ruta</h1>
+    <p>Marca los objetivos y asigna un nivel de capacidad (1–5). Luego crea tu ecosistema.</p>
+  </header>
+
+  <main class="board" id="board">
+    <!-- Las secciones/dominios se renderizan desde JS con el dataset -->
+  </main>
+
+  <footer class="actionbar">
+    <div class="status" id="statusMsg">0 objetivos seleccionados</div>
+    <button id="crearBtn" class="primary" disabled>Crear ecosistema</button>
+  </footer>
+
+  <script src="js/ecosistema.js"></script>
+</body>
+</html>

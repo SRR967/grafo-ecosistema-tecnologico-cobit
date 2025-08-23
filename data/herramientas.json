@@ -1,0 +1,444 @@
+[
+  {
+    "id": "Alfresco",
+    "tipo": "herramienta",
+    "categoria": "Gestión documental",
+    "descripcion": "Plataforma de gestión documental empresarial y colaboración que permite centralizar archivos, controlar versiones, flujos de aprobación y automatizar procesos relacionados con la gestión de la información.",
+    "casos_uso": [
+      "Repositorio documental corporativo- Automatización de flujos de trabajo- Colaboración en proyectos"
+    ],
+    "tipo_herramienta": "Gestor de contenidos"
+  },
+  {
+    "id": "Anaconda",
+    "tipo": "herramienta",
+    "categoria": "Ciencia de datos",
+    "descripcion": "Distribución de Python y R para ciencia de datos, machine learning y análisis avanzado. Incluye librerías populares como NumPy, pandas y TensorFlow, así como entornos interactivos como Jupyter Notebook.",
+    "casos_uso": [
+      "Análisis de datos masivos- Modelos de machine learning- Visualización y exploración de datos"
+    ],
+    "tipo_herramienta": "Distribución científica"
+  },
+  {
+    "id": "Ansible",
+    "tipo": "herramienta",
+    "categoria": "DevOps / Infraestructura",
+    "descripcion": "Herramienta para automatización de configuración, orquestación y despliegue de aplicaciones. Utiliza archivos YAML fáciles de entender y no requiere agentes.",
+    "casos_uso": [
+      "Infraestructura como código- Automatización de despliegues- Configuración de servidores"
+    ],
+    "tipo_herramienta": "Automatización"
+  },
+  {
+    "id": "Apache Dubbo",
+    "tipo": "herramienta",
+    "categoria": "Integración de servicios",
+    "descripcion": "Framework Java para llamadas a procedimientos remotos (RPC) y desarrollo de arquitecturas distribuidas basadas en microservicios. Ofrece balanceo de carga, descubrimiento de servicios y tolerancia a fallos.",
+    "casos_uso": [
+      "Implementación de microservicios- Integración de aplicaciones distribuidas- Comunicación entre sistemas"
+    ],
+    "tipo_herramienta": "Framework RPC"
+  },
+  {
+    "id": "Apache Hive",
+    "tipo": "herramienta",
+    "categoria": "Bases de datos",
+    "descripcion": "Framework open source para almacenamiento y procesamiento de grandes volúmenes de datos basado en Hadoop",
+    "casos_uso": [
+      "Procesamiento de datos masivos",
+      "Consultas distribuidas con SQL",
+      "Integración con ecosistemas Big Data"
+    ],
+    "tipo_herramienta": "Bases de datos / Big Data"
+  },
+  {
+    "id": "Apache JMeter",
+    "tipo": "herramienta",
+    "categoria": "QA / Testing",
+    "descripcion": "Herramienta para realizar pruebas de carga y estrés en aplicaciones web, servidores y servicios. Genera reportes detallados y métricas de rendimiento.",
+    "casos_uso": [
+      "Stress testing- Medición de rendimiento web- QA en aplicaciones"
+    ],
+    "tipo_herramienta": "Pruebas de rendimiento"
+  },
+  {
+    "id": "Apache OFBiz",
+    "tipo": "herramienta",
+    "categoria": "Negocios / ERP",
+    "descripcion": "Framework open source para gestión empresarial que incluye ERP, CRM y e-commerce. Es modular y permite personalizar procesos internos y de comercio electrónico.",
+    "casos_uso": [
+      "Gestión de procesos empresariales- Implementación de CRM- Plataformas de e-commerce"
+    ],
+    "tipo_herramienta": "ERP/CRM/E-Commerce"
+  },
+  {
+    "id": "Apache Open",
+    "tipo": "herramienta",
+    "categoria": "Productividad",
+    "descripcion": "Una completa suite ofimática de código abierto que incluye procesador de textos, hojas de cálculo, presentaciones, diagramación y bases de datos. Está diseñada para ofrecer una alternativa libre a soluciones propietarias y permite trabajar con formatos estándar y abrir archivos de otras suites como Microsoft Office.",
+    "casos_uso": [
+      "Creación y edición de documentos corporativos- Presentaciones empresariales- Gestión de hojas de cálculo y reportes"
+    ],
+    "tipo_herramienta": "Suite ofimática"
+  },
+  {
+    "id": "Archi",
+    "tipo": "herramienta",
+    "categoria": "Arquitectura empresarial",
+    "descripcion": "Herramienta especializada en la creación de modelos de arquitectura empresarial utilizando el estándar ArchiMate. Permite visualizar relaciones entre procesos, aplicaciones, infraestructura y estrategias, ayudando a planificar la evolución de sistemas de TI y procesos de negocio.",
+    "casos_uso": [
+      "Diseño de arquitecturas empresariales- Documentación de procesos de TI- Planificación estratégica de sistemas"
+    ],
+    "tipo_herramienta": "Modelador de arquitectura"
+  },
+  {
+    "id": "Collabtive",
+    "tipo": "herramienta",
+    "categoria": "Colaboración",
+    "descripcion": "Sistema open source para la gestión de proyectos y tareas en equipo. Ofrece seguimiento de hitos, calendarios, gestión de usuarios y comunicación interna. Está orientado a pequeñas y medianas empresas que buscan una alternativa libre a herramientas comerciales de gestión de proyectos.",
+    "casos_uso": [
+      "Planificación de proyectos colaborativos- Asignación y seguimiento de tareas- Gestión de hitos y tiempos"
+    ],
+    "tipo_herramienta": "Gestor de proyectos"
+  },
+  {
+    "id": "Eramba",
+    "tipo": "herramienta",
+    "categoria": "Seguridad y cumplimiento",
+    "descripcion": "Solución integral de Gobernanza, Riesgo y Cumplimiento (GRC) diseñada para la gestión de políticas, auditorías, riesgos y controles de seguridad. Incluye módulos para evaluación de riesgos, gestión documental y planificación de auditorías.",
+    "casos_uso": [
+      "Gobernanza y gestión de riesgos- Cumplimiento de normativas internacionales- Planificación de auditorías internas"
+    ],
+    "tipo_herramienta": "Plataforma GRC"
+  },
+  {
+    "id": "GitHub",
+    "tipo": "herramienta",
+    "categoria": "Desarrollo",
+    "descripcion": "Plataforma de control de versiones basada en Git que permite colaboración de código, revisión de cambios e integración continua.",
+    "casos_uso": [
+      "Control de versiones- Colaboración en proyectos- Integración CI/CD"
+    ],
+    "tipo_herramienta": "Repositorio de código"
+  },
+  {
+    "id": "GLPI",
+    "tipo": "herramienta",
+    "categoria": "Gestión de TI",
+    "descripcion": "Sistema de gestión de activos de TI, helpdesk y mantenimiento preventivo/correctivo. Permite gestionar inventarios de hardware y software, contratos, licencias y tickets de soporte.",
+    "casos_uso": [
+      "Inventario de activos TI- Mesa de ayuda corporativa- Gestión de contratos y licencias"
+    ],
+    "tipo_herramienta": "IT Asset Management (ITAM)"
+  },
+  {
+    "id": "GPG",
+    "tipo": "herramienta",
+    "categoria": "Seguridad / Criptografía",
+    "descripcion": "Herramienta de cifrado de clave pública utilizada para proteger datos y realizar firmas digitales seguras.",
+    "casos_uso": [
+      "Cifrado de datos sensibles- Firmas digitales- Seguridad de comunicaciones"
+    ],
+    "tipo_herramienta": "Cifrado"
+  },
+  {
+    "id": "Grafana",
+    "tipo": "herramienta",
+    "categoria": "Monitoreo / Analítica",
+    "descripcion": "Plataforma de visualización de métricas y dashboards en tiempo real. Compatible con múltiples fuentes de datos como Prometheus, InfluxDB y Elastic.",
+    "casos_uso": [
+      "Dashboards de monitoreo TI- Visualización de métricas de negocio- Análisis en tiempo real"
+    ],
+    "tipo_herramienta": "Visualización de datos"
+  },
+  {
+    "id": "HAProxy",
+    "tipo": "herramienta",
+    "categoria": "Redes / Infraestructura",
+    "descripcion": "Software open source para balanceo de carga y proxy inverso de alto rendimiento, utilizado para aplicaciones web y servicios críticos.",
+    "casos_uso": [
+      "Balanceo de tráfico web- Alta disponibilidad- Proxy inverso seguro"
+    ],
+    "tipo_herramienta": "Balanceador de carga"
+  },
+  {
+    "id": "Huginn",
+    "tipo": "herramienta",
+    "categoria": "Integración / Bots",
+    "descripcion": "Plataforma para crear agentes automatizados que monitorean eventos y realizan tareas automáticamente integrándose con APIs externas.",
+    "casos_uso": [
+      "Automatización de tareas repetitivas- Integración de servicios- Monitoreo de eventos"
+    ],
+    "tipo_herramienta": "Automatización"
+  },
+  {
+    "id": "Issabel",
+    "tipo": "herramienta",
+    "categoria": "Telefonía VoIP",
+    "descripcion": "Plataforma de comunicaciones unificadas basada en Asterisk. Ofrece funciones de PBX, call center, grabación de llamadas, IVR y herramientas de integración VoIP.",
+    "casos_uso": [
+      "Central telefónica empresarial- Plataformas de call center- Comunicaciones VoIP integradas"
+    ],
+    "tipo_herramienta": "PBX / Comunicaciones"
+  },
+  {
+    "id": "iTop by Combodo",
+    "tipo": "herramienta",
+    "categoria": "Gestión de TI",
+    "descripcion": "Plataforma ITSM modular que incluye gestión de servicios, incidencias, problemas, cambios y una CMDB completa.",
+    "casos_uso": [
+      "Gestión de servicios TI- Mesa de ayuda- Gestión de cambios y configuración"
+    ],
+    "tipo_herramienta": "IT Service Management (ITSM)"
+  },
+  {
+    "id": "JFire",
+    "tipo": "herramienta",
+    "categoria": "Negocios / ERP",
+    "descripcion": "Plataforma modular de ERP y CRM open source para empresas. Permite gestionar clientes, procesos de negocio, ventas, inventarios y finanzas. Es extensible y puede adaptarse a distintos sectores industriales.",
+    "casos_uso": [
+      "Gestión de clientes y ventas- Administración de inventarios- Automatización de procesos empresariales"
+    ],
+    "tipo_herramienta": "ERP/CRM"
+  },
+  {
+    "id": "Kali Linux",
+    "tipo": "herramienta",
+    "categoria": "Ciberseguridad",
+    "descripcion": "Distribución Linux especializada en pruebas de penetración, auditorías de seguridad y análisis forense digital. Incluye una gran cantidad de herramientas de hacking ético.",
+    "casos_uso": [
+      "Pentesting profesional- Auditorías de seguridad- Forense digital"
+    ],
+    "tipo_herramienta": "Distribución de pentesting"
+  },
+  {
+    "id": "MantisBT",
+    "tipo": "herramienta",
+    "categoria": "Gestión de incidencias",
+    "descripcion": "Herramienta para la gestión de errores (bug tracking) y seguimiento de incidencias. Permite gestionar proyectos de desarrollo, priorizar errores, asignar tareas y generar reportes detallados.",
+    "casos_uso": [
+      "Gestión de bugs en software- Seguimiento de incidencias de TI- Reportes de calidad en proyectos"
+    ],
+    "tipo_herramienta": "Sistema de seguimiento"
+  },
+  {
+    "id": "Moodle",
+    "tipo": "herramienta",
+    "categoria": "Educación",
+    "descripcion": "Plataforma de aprendizaje online open source utilizada por instituciones educativas y empresas para capacitación interna. Ofrece cursos, evaluaciones, foros y reportes de progreso.",
+    "casos_uso": [
+      "Cursos de educación virtual- Capacitación interna corporativa- Programas de e-learning"
+    ],
+    "tipo_herramienta": "LMS (Learning Management)"
+  },
+  {
+    "id": "MySQL",
+    "tipo": "herramienta",
+    "categoria": "Bases de datos",
+    "descripcion": "Base de datos relacional open source ampliamente utilizada en aplicaciones web y empresariales. Ofrece alta escalabilidad y soporte para transacciones ACID.",
+    "casos_uso": [
+      "Almacenamiento de datos- Aplicaciones web- Sistemas empresariales"
+    ],
+    "tipo_herramienta": "Sistema de base de datos"
+  },
+  {
+    "id": "Open Source Risk Engine",
+    "tipo": "herramienta",
+    "categoria": "Finanzas / Cumplimiento",
+    "descripcion": "Plataforma open source diseñada para el modelado, simulación y análisis cuantitativo de riesgos financieros, de mercado y operacionales. Facilita la creación de escenarios y permite cumplir con regulaciones relacionadas con la gestión de riesgos.",
+    "casos_uso": [
+      "Gestión de riesgos financieros- Simulación de escenarios económicos- Cumplimiento de normativas regulatorias"
+    ],
+    "tipo_herramienta": "Motor de análisis de riesgo"
+  },
+  {
+    "id": "OpenAudIT",
+    "tipo": "herramienta",
+    "categoria": "Gestión de TI",
+    "descripcion": "Herramienta para descubrimiento automático y auditoría de dispositivos conectados en una red corporativa.",
+    "casos_uso": [
+      "Inventario automático de red- Auditoría de dispositivos- Gestión de infraestructura TI"
+    ],
+    "tipo_herramienta": "Auditoría de red"
+  },
+  {
+    "id": "OpenSCAP v2.1",
+    "tipo": "herramienta",
+    "categoria": "Seguridad y cumplimiento",
+    "descripcion": "Framework open source para auditorías de seguridad, escaneo de vulnerabilidades y cumplimiento de estándares.",
+    "casos_uso": [
+      "Auditorías de políticas de seguridad- Cumplimiento normativo- Escaneo de vulnerabilidades"
+    ],
+    "tipo_herramienta": "Escáner de cumplimiento"
+  },
+  {
+    "id": "OpenSSH",
+    "tipo": "herramienta",
+    "categoria": "Redes / Seguridad",
+    "descripcion": "Implementación de SSH y SFTP para conexiones seguras, administración remota y transferencia cifrada de archivos.",
+    "casos_uso": [
+      "Acceso remoto seguro- Transferencias cifradas- Automatización segura"
+    ],
+    "tipo_herramienta": "Herramienta de conexión SSH"
+  },
+  {
+    "id": "OrangeHRM",
+    "tipo": "herramienta",
+    "categoria": "Recursos Humanos",
+    "descripcion": "Sistema de gestión de recursos humanos que incluye módulos de reclutamiento, evaluación de desempeño y administración de personal.",
+    "casos_uso": [
+      "Gestión de empleados- Procesos de RRHH- Administración de talento"
+    ],
+    "tipo_herramienta": "HR Management"
+  },
+  {
+    "id": "Owasp ZAP",
+    "tipo": "herramienta",
+    "categoria": "Ciberseguridad",
+    "descripcion": "Herramienta de pruebas de penetración para aplicaciones web mantenida por OWASP. Facilita la detección de vulnerabilidades y pruebas automatizadas.",
+    "casos_uso": [
+      "Pentesting de aplicaciones web- Análisis de seguridad automatizado- Auditorías de vulnerabilidades"
+    ],
+    "tipo_herramienta": "Escáner de seguridad web"
+  },
+  {
+    "id": "pfSense",
+    "tipo": "herramienta",
+    "categoria": "Seguridad de red",
+    "descripcion": "Sistema de firewall y router basado en FreeBSD. Permite configurar VPNs, balanceo de carga y políticas de seguridad de red avanzadas.",
+    "casos_uso": [
+      "Seguridad perimetral- Redes corporativas- Configuración de VPNs"
+    ],
+    "tipo_herramienta": "Firewall / Router"
+  },
+  {
+    "id": "phpBB",
+    "tipo": "herramienta",
+    "categoria": "Comunicación / Comunidad",
+    "descripcion": "Plataforma de foros en línea open source utilizada para crear comunidades virtuales y sistemas de soporte. Ofrece herramientas de moderación, gestión de usuarios, mensajería y personalización de temas.",
+    "casos_uso": [
+      "Creación de comunidades en línea- Foros de soporte técnico- Comunicación interna corporativa"
+    ],
+    "tipo_herramienta": "Foro web"
+  },
+  {
+    "id": "Proxmox",
+    "tipo": "herramienta",
+    "categoria": "Infraestructura",
+    "descripcion": "Plataforma para virtualización de servidores basada en KVM y contenedores LXC. Permite gestionar clústeres de alta disponibilidad.",
+    "casos_uso": [
+      "Gestión de máquinas virtuales- Virtualización de servidores- Entornos de alta disponibilidad"
+    ],
+    "tipo_herramienta": "Virtualización"
+  },
+  {
+    "id": "Proxmox Mail Gateway",
+    "tipo": "herramienta",
+    "categoria": "Seguridad / Correo",
+    "descripcion": "Sistema de filtrado de correo empresarial que protege contra spam, phishing y malware. Se integra fácilmente con servidores de correo existentes.",
+    "casos_uso": [
+      "Protección contra correo malicioso- Filtro de spam empresarial- Seguridad de correo electrónico"
+    ],
+    "tipo_herramienta": "Filtro de correo"
+  },
+  {
+    "id": "Ralph",
+    "tipo": "herramienta",
+    "categoria": "Gestión de TI",
+    "descripcion": "Sistema para inventario, gestión de activos de TI y auditoría de infraestructura. Integrable con CMDB y sistemas de gestión.",
+    "casos_uso": [
+      "Inventario de hardware y software- Gestión de activos TI- Auditoría de infraestructura"
+    ],
+    "tipo_herramienta": "IT Asset Management"
+  },
+  {
+    "id": "Rocket.Chat",
+    "tipo": "herramienta",
+    "categoria": "Colaboración",
+    "descripcion": "Plataforma de mensajería y colaboración en equipo open source con soporte para integración de bots, APIs y canales seguros.",
+    "casos_uso": [
+      "Comunicación interna- Integración con herramientas empresariales- Mensajería en tiempo real"
+    ],
+    "tipo_herramienta": "Comunicación en equipo"
+  },
+  {
+    "id": "Snipe-IT",
+    "tipo": "herramienta",
+    "categoria": "IT Asset Management (ITAM)",
+    "descripcion": "Plataforma para gestionar inventarios de hardware y software, seguimiento de licencias y control de activos en empresas.",
+    "casos_uso": [
+      "Inventario de hardware y software- Gestión de licencias- Control de activos TI"
+    ],
+    "tipo_herramienta": "Gestión de activos TI"
+  },
+  {
+    "id": "Snort",
+    "tipo": "herramienta",
+    "categoria": "Seguridad de red",
+    "descripcion": "Sistema de detección y prevención de intrusiones que analiza tráfico de red en tiempo real y genera alertas ante patrones maliciosos.",
+    "casos_uso": [
+      "Detección de intrusiones- Monitoreo de red- Seguridad perimetral"
+    ],
+    "tipo_herramienta": "IDS/IPS"
+  },
+  {
+    "id": "Tactical RMM",
+    "tipo": "herramienta",
+    "categoria": "Monitoreo de TI",
+    "descripcion": "Plataforma de monitoreo y gestión remota de sistemas y endpoints. Permite automatizar tareas y administrar dispositivos de forma centralizada.",
+    "casos_uso": [
+      "Administración remota- Monitoreo de endpoints- Soporte técnico a distancia"
+    ],
+    "tipo_herramienta": "Remote Monitoring & Mgmt"
+  },
+  {
+    "id": "Wazuh",
+    "tipo": "herramienta",
+    "categoria": "Monitoreo y seguridad",
+    "descripcion": "Plataforma SIEM open source para el monitoreo de logs, detección de intrusiones y análisis de seguridad. Ofrece integración con Elastic Stack.",
+    "casos_uso": [
+      "Detección de amenazas- Monitoreo de logs en tiempo real- Cumplimiento de normativas"
+    ],
+    "tipo_herramienta": "Seguridad / SIEM"
+  },
+  {
+    "id": "Wireshark",
+    "tipo": "herramienta",
+    "categoria": "Redes / Monitoreo",
+    "descripcion": "Analizador de protocolos de red que captura y examina paquetes en tiempo real para diagnóstico y auditoría de seguridad.",
+    "casos_uso": [
+      "Análisis de tráfico de red- Diagnóstico de problemas de conectividad- Seguridad de redes"
+    ],
+    "tipo_herramienta": "Analizador de red"
+  },
+  {
+    "id": "Zabbix",
+    "tipo": "herramienta",
+    "categoria": "Monitoreo",
+    "descripcion": "Solución open source para el monitoreo de redes, servidores y aplicaciones. Ofrece métricas en tiempo real, alertas, dashboards personalizables y capacidad de monitoreo distribuido.",
+    "casos_uso": [
+      "Monitoreo de infraestructuras TI- Alertas en tiempo real- Seguimiento de rendimiento de aplicaciones y servidores"
+    ],
+    "tipo_herramienta": "Monitor de infraestructura"
+  },
+  {
+    "id": "Zammad",
+    "tipo": "herramienta",
+    "categoria": "Helpdesk / Soporte",
+    "descripcion": "Plataforma open source para la gestión de tickets y soporte al cliente. Integra múltiples canales de comunicación (correo, chat, redes sociales).",
+    "casos_uso": [
+      "Soporte ITSM- Atención multicanal al cliente- Gestión de incidencias internas"
+    ],
+    "tipo_herramienta": "Sistema de ticketing"
+  },
+  {
+    "id": "Znuny",
+    "tipo": "herramienta",
+    "categoria": "Helpdesk / Soporte",
+    "descripcion": "Sistema de gestión de tickets y soporte técnico. Znuny es la versión open source de OTRS, utilizada ampliamente en empresas para gestionar solicitudes, incidencias y flujos de trabajo de atención al cliente.",
+    "casos_uso": [
+      "Mesa de ayuda corporativa- Gestión de solicitudes internas- ITSM y soporte técnico"
+    ],
+    "tipo_herramienta": "Sistema de ticketing"
+  }
+]
