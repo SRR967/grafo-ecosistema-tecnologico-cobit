@@ -1,74 +1,104 @@
-// ===== Dataset de los 40 objetivos (id, nombre, dominio) =====
-const DATA = [
-  // EDM (5)
-  {id:"EDM01", nombre:"Garantizar el establecimiento y mantenimiento del marco de gobierno", dominio:"EDM"},
-  {id:"EDM02", nombre:"Asegurar la realización de beneficios", dominio:"EDM"},
-  {id:"EDM03", nombre:"Asegurar la optimización del riesgo", dominio:"EDM"},
-  {id:"EDM04", nombre:"Asegurar la optimización de los recursos", dominio:"EDM"},
-  {id:"EDM05", nombre:"Asegurar la transparencia con las partes interesadas", dominio:"EDM"},
+// js/ecosistema.js
 
-  // APO (14)
-  {id:"APO01", nombre:"Gestionar el marco de gestión de TI", dominio:"APO"},
-  {id:"APO02", nombre:"Gestionar la estrategia", dominio:"APO"},
-  {id:"APO03", nombre:"Gestionar la arquitectura de la empresa", dominio:"APO"},
-  {id:"APO04", nombre:"Gestionar la innovación", dominio:"APO"},
-  {id:"APO05", nombre:"Gestionar el portafolio", dominio:"APO"},
-  {id:"APO06", nombre:"Gestionar el presupuesto y los costes", dominio:"APO"},
-  {id:"APO07", nombre:"Gestionar los recursos humanos", dominio:"APO"},
-  {id:"APO08", nombre:"Gestionar las relaciones", dominio:"APO"},
-  {id:"APO09", nombre:"Gestionar los acuerdos de servicio", dominio:"APO"},
-  {id:"APO10", nombre:"Gestionar los proveedores", dominio:"APO"},
-  {id:"APO11", nombre:"Gestionar la calidad", dominio:"APO"},
-  {id:"APO12", nombre:"Gestionar el riesgo", dominio:"APO"},
-  {id:"APO13", nombre:"Gestionar la seguridad", dominio:"APO"},
-  {id:"APO14", nombre:"Gestionar los datos", dominio:"APO"},
+// ================= Util =================
+const badge = (id, nombre) =>
+  `<span class="badge">${id}</span><div class="obj-name">${nombre}</div>`;
 
-  // BAI (11)
-  {id:"BAI01", nombre:"Gestionar los programas", dominio:"BAI"},
-  {id:"BAI02", nombre:"Gestionar la definición de requisitos", dominio:"BAI"},
-  {id:"BAI03", nombre:"Gestionar la identificación y construcción de soluciones", dominio:"BAI"},
-  {id:"BAI04", nombre:"Gestionar la disponibilidad y capacidad", dominio:"BAI"},
-  {id:"BAI05", nombre:"Gestionar los cambios organizativos", dominio:"BAI"},
-  {id:"BAI06", nombre:"Gestionar los cambios de TI", dominio:"BAI"},
-  {id:"BAI07", nombre:"Gestionar la aceptación y transición de cambios", dominio:"BAI"},
-  {id:"BAI08", nombre:"Gestionar el conocimiento", dominio:"BAI"},
-  {id:"BAI09", nombre:"Gestionar los activos", dominio:"BAI"},
-  {id:"BAI10", nombre:"Gestionar la configuración", dominio:"BAI"},
-  {id:"BAI11", nombre:"Gestionar los proyectos", dominio:"BAI"},
+function dominioDe(id) {
+  const pref = String(id).slice(0, 3).toUpperCase();
+  if (["EDM", "APO", "BAI", "DSS", "MEA"].includes(pref)) return pref;
+  return "OTR"; // fallback
+}
 
-  // DSS (6)
-  {id:"DSS01", nombre:"Gestionar las operaciones", dominio:"DSS"},
-  {id:"DSS02", nombre:"Gestionar las solicitudes e incidentes de servicio", dominio:"DSS"},
-  {id:"DSS03", nombre:"Gestionar los problemas", dominio:"DSS"},
-  {id:"DSS04", nombre:"Gestionar la continuidad", dominio:"DSS"},
-  {id:"DSS05", nombre:"Gestionar los servicios de seguridad", dominio:"DSS"},
-  {id:"DSS06", nombre:"Gestionar los controles de procesos de negocio", dominio:"DSS"},
+function normalizarHerramienta(h) {
+  if (h == null) return "";
+  const t = String(h).trim();
+  if (!t || t.toLowerCase() === "n/a" || t === "-") return "";
+  return t;
+}
 
-  // MEA (4)
-  {id:"MEA01", nombre:"Gestionar la monitorización del rendimiento y la conformidad", dominio:"MEA"},
-  {id:"MEA02", nombre:"Gestionar el sistema de control interno", dominio:"MEA"},
-  {id:"MEA03", nombre:"Gestionar el cumplimiento de los requisitos externos", dominio:"MEA"},
-  {id:"MEA04", nombre:"Gestionar el aseguramiento", dominio:"MEA"},
-];
+// ================= Estado =================
+const state = {
+  // id -> nivel (string "1".."5" o "")
+  selected: new Map(),
+  // dataset dinámico leído desde actividades.json
+  objetivos: [], // [{id, nombre, dominio}]
+  // índice para cálculos de enlaces filtrados
+  indiceActividades: new Map(), // idObj -> [{herramienta, nivel_capacidad}, ...]
+};
 
-// ===== Render del tablero por dominios (figura estilo COBIT) =====
+// ================== Cargar actividades.json ==================
+(async function init() {
+  try {
+    const res = await fetch("data/actividades.json", { cache: "no-store" });
+    const data = await res.json();
+
+    // Construimos lista de objetivos y un índice de actividades por objetivo
+    const objetivos = [];
+    const idx = new Map();
+
+    for (const obj of data) {
+      const id = obj.id;
+      const nombre = obj.nombre || "";
+      const dom = dominioDe(id);
+
+      objetivos.push({ id, nombre, dominio: dom });
+
+      // aplanamos actividades con (herramienta, nivel_capacidad)
+      const acts = [];
+      for (const p of (obj.practicas || [])) {
+        for (const a of (p.actividades || [])) {
+          const herramienta = normalizarHerramienta(a.herramienta);
+          const nivel = Number(a.nivel_capacidad || 0);
+          acts.push({ herramienta, nivel_capacidad: nivel });
+        }
+      }
+      idx.set(id, acts);
+    }
+
+    // guardamos en estado
+    state.objetivos = objetivos.sort((a, b) => a.id.localeCompare(b.id));
+    state.indiceActividades = idx;
+
+    // render
+    render();
+  } catch (err) {
+    console.error("No se pudo cargar data/actividades.json", err);
+    document.getElementById("board").innerHTML =
+      `<div style="padding:16px;color:#f88">Error cargando actividades.json.</div>`;
+  }
+})();
+
+// ================== Render del tablero ==================
 const board = document.getElementById("board");
-const byDomain = (dom) => DATA.filter(d => d.dominio === dom);
 
 const DOMAINS = [
-  {key:"EDM", title:"EDM — Evaluar, Dirigir y Monitorizar", areaClass:"domain--edm"},
-  {key:"APO", title:"APO — Alinear, Planear y Organizar", areaClass:"domain--apo"},
-  {key:"BAI", title:"BAI — Construir, Adquirir e Implementar", areaClass:"domain--bai"},
-  {key:"DSS", title:"DSS — Entregar, Dar Soporte y Servicio", areaClass:"domain--dss"},
-  {key:"MEA", title:"MEA — Monitorizar, Evaluar y Valorar", areaClass:"domain--mea"},
+  { key: "EDM", title: "EDM — Evaluar, Dirigir y Monitorizar", areaClass: "domain--edm" },
+  { key: "APO", title: "APO — Alinear, Planear y Organizar", areaClass: "domain--apo" },
+  { key: "BAI", title: "BAI — Construir, Adquirir e Implementar", areaClass: "domain--bai" },
+  { key: "DSS", title: "DSS — Entregar, Dar Soporte y Servicio", areaClass: "domain--dss" },
+  { key: "MEA", title: "MEA — Monitorizar, Evaluar y Valorar", areaClass: "domain--mea" },
 ];
 
-const state = {
-  selected: new Map(), // id -> nivel (1..5)
-};
+function byDomain(dom) {
+  return state.objetivos.filter(d => d.dominio === dom);
+}
 
 function render() {
   board.innerHTML = "";
+
+  // Agregamos de nuevo los “frames” de fondo (si tu HTML no los trae)
+  if (!board.querySelector(".frame-left")) {
+    const f1 = document.createElement("div");
+    f1.className = "frame-left";
+    f1.setAttribute("aria-hidden", "true");
+    const f2 = document.createElement("div");
+    f2.className = "frame-mea";
+    f2.setAttribute("aria-hidden", "true");
+    board.appendChild(f1);
+    board.appendChild(f2);
+  }
+
   DOMAINS.forEach(dom => {
     const wrap = document.createElement("section");
     wrap.className = `domain ${dom.areaClass}`;
@@ -80,9 +110,7 @@ function render() {
     const body = document.createElement("div");
     body.className = "domain-body";
 
-    byDomain(dom.key).forEach(item => {
-      body.appendChild(card(item));
-    });
+    byDomain(dom.key).forEach(item => body.appendChild(card(item)));
 
     wrap.appendChild(header);
     wrap.appendChild(body);
@@ -93,7 +121,7 @@ function render() {
   updateButtonState();
 }
 
-function card(item){
+function card(item) {
   const isSelected = state.selected.has(item.id);
 
   const el = document.createElement("div");
@@ -102,7 +130,7 @@ function card(item){
 
   const title = document.createElement("div");
   title.className = "obj-title";
-  title.innerHTML = `<span class="badge">${item.id}</span><div class="obj-name">${item.nombre}</div>`;
+  title.innerHTML = badge(item.id, item.nombre);
 
   const capacity = document.createElement("div");
   capacity.className = "capacity";
@@ -123,14 +151,11 @@ function card(item){
     capacity.querySelector("select").value = String(state.selected.get(item.id));
   }
 
-  // Click en tarjeta: alterna selección
+  // Click en tarjeta: alterna selección (excepto si clic en <select>)
   el.addEventListener("click", (e) => {
-    // Si el click fue sobre el <select>, no alternar la selección
     if (e.target && e.target.tagName === "SELECT") return;
-
-    const selected = el.classList.toggle("selected");
-    if (selected) {
-      // si se selecciona y no había nivel, dejar “Seleccione…”
+    const selectedNow = el.classList.toggle("selected");
+    if (selectedNow) {
       if (!state.selected.has(item.id)) state.selected.set(item.id, "");
     } else {
       state.selected.delete(item.id);
@@ -141,8 +166,7 @@ function card(item){
 
   // Cambio de nivel
   capacity.querySelector("select").addEventListener("change", (e) => {
-    const val = e.target.value;
-    state.selected.set(item.id, val);
+    state.selected.set(item.id, e.target.value);
     updateStatus();
     updateButtonState();
   });
@@ -152,38 +176,73 @@ function card(item){
   return el;
 }
 
-function updateStatus(){
-  const totalSel = Array.from(state.selected.keys()).length;
+function updateStatus() {
+  const totalSel = state.selected.size;
   const completos = Array.from(state.selected.values()).filter(v => v !== "").length;
   document.getElementById("statusMsg").textContent =
     `${totalSel} objetivos seleccionados · ${completos} con nivel asignado`;
 }
 
-function allSelectedHaveLevel(){
+function allSelectedHaveLevel() {
   if (state.selected.size === 0) return false;
-  for (const v of state.selected.values()){
-    if (v === "") return false;
-  }
+  for (const v of state.selected.values()) if (v === "") return false;
   return true;
 }
 
-function updateButtonState(){
+function updateButtonState() {
   document.getElementById("crearBtn").disabled = !allSelectedHaveLevel();
+}
+
+// ================== Calcular enlaces filtrados ==================
+function calcularLinksFiltrados() {
+  // Devuelve pares {source: objId, target: herramienta} para cada objetivo
+  // considerando SOLO actividades con nivel_capacidad <= nivel elegido
+  // y herramientas válidas.
+  const links = [];
+  const capMap = Object.fromEntries(
+    Array.from(state.selected.entries()).map(([id, nivel]) => [id, Number(nivel)])
+  );
+
+  for (const [objId, nivelSel] of Object.entries(capMap)) {
+    const acts = state.indiceActividades.get(objId) || [];
+    const herramientas = new Set();
+    for (const a of acts) {
+      if (!a) continue;
+      const h = normalizarHerramienta(a.herramienta);
+      const n = Number(a.nivel_capacidad || 0);
+      if (!h) continue;
+      if (n > 0 && n <= nivelSel) herramientas.add(h);
+    }
+    for (const h of herramientas) {
+      links.push({ source: objId, target: h });
+    }
+  }
+  return links;
 }
 
 // ===== Acción principal =====
 document.getElementById("crearBtn").addEventListener("click", () => {
-  if (!allSelectedHaveLevel()) return;
+  // Todos los seleccionados deben tener nivel
+  const payload = Array.from(state.selected.entries())
+    .map(([id, nivel]) => ({ id, nivel_capacidad: Number(nivel) }))
+    .filter(x => x.nivel_capacidad >= 1 && x.nivel_capacidad <= 5);
 
-  // Guardar en localStorage y continuar
-  const payload = Array.from(state.selected.entries()).map(([id, nivel]) => ({
-    id, nivel_capacidad: Number(nivel)
-  }));
+  if (payload.length === 0) return;
+
+  // Mapa objetivo -> nivel
+  const capMap = Object.fromEntries(payload.map(x => [x.id, x.nivel_capacidad]));
+  // Solo ids
+  const refs = payload.map(x => x.id);
+
+  // Persistimos para el grafo/tabla
   localStorage.setItem("hojaRutaSeleccion", JSON.stringify(payload));
+  localStorage.setItem("capacidadPorObjetivo", JSON.stringify(capMap));
+  localStorage.setItem("userRefs", JSON.stringify(refs)); // por si lo usabas antes
 
-  // Cambia aquí el destino si tu siguiente vista es otra
+  // (opcional) limpiar claves viejas que ya no uses.
+  localStorage.removeItem("maturityMap");
+
+  // Ir al grafo
   window.location.href = "index.html";
 });
 
-// Render inicial
-render();

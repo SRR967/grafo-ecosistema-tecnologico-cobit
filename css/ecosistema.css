@@ -1,24 +1,35 @@
-/* ====== Base ====== */
+/* =========================================================
+   Ecosistema COBIT 2019 — Layout estilo figura oficial
+   ========================================================= */
+
+/* ====== Paleta y constantes ====== */
 :root{
   --bg:#1e1e1e;
   --panel:#222;
   --card:#2a2a2a;
   --border:#333;
+  --border-2:#2f3444;
   --text:#e6e6e6;
   --muted:#bdbdbd;
 
   --cobit-magenta:#a4044b;
   --cobit-blue:#043c7c;
 
-  --ok:#00c853;
-  --warn:#ffb300;
+  --gap:18px;
+  --pad:16px;
+  --sidebar:300px;      /* ancho columna MEA */
+  --frame-bg:#20242f;
+
+  /* Altura de la banda EDM (imitando la figura) */
+  --edm-h: 120px;
 }
 
+/* ====== Reset/estructura ====== */
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
 body{
   margin:0;
-  font-family:'Segoe UI', sans-serif;
+  font-family:'Segoe UI', system-ui, sans-serif;
   background:var(--bg);
   color:var(--text);
   display:flex;
@@ -36,6 +47,7 @@ body{
   margin:0 0 6px 0;
   color:var(--cobit-magenta);
   font-size:28px;
+  letter-spacing:.2px;
 }
 .topbar p{
   margin:0;
@@ -43,81 +55,115 @@ body{
   font-size:14px;
 }
 
-/* ====== Board (grid por dominios estilo figura) ====== */
+/* ====== Board (grid por dominios) ====== */
 .board{
+  position:relative;
   flex:1;
-  padding:16px;
+  padding:var(--pad);
   display:grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 280px; /* última columna reservada para MEA */
+  grid-template-columns: repeat(4, 1fr) var(--sidebar);
   grid-template-areas:
-    "edm edm edm edm mea"
-    "apo apo apo apo mea"
+    "edm edm edm edm edm"   /* EDM ocupa todo el ancho */
+    "apo apo apo apo mea"   /* MEA empieza debajo de EDM */
     "bai bai bai bai mea"
     "dss dss dss dss mea";
-  grid-auto-rows: minmax(140px, auto);
-  gap:16px;
+  grid-auto-rows:auto;
+  gap:var(--gap);
 }
 
-/* Contenedores de dominio */
+/* ====== Marcos de fondo ====== */
+.board > .frame-left,
+.board > .frame-mea{
+  position:absolute;
+  z-index:0;               /* detrás de los dominios */
+  border-radius:10px;
+  background:var(--frame-bg);
+  border:8px solid var(--border-2);
+}
+
+/* Marco grande para APO/BAI/DSS a la izquierda (debajo de EDM) */
+.board > .frame-left{
+  top:calc(var(--pad) + var(--edm-h) + var(--gap)); /* empieza debajo de EDM */
+  left:var(--pad);
+  bottom:var(--pad);
+  right:calc(var(--pad) + var(--sidebar) + var(--gap));
+}
+
+/* Marco vertical para MEA (también debajo de EDM) */
+.board > .frame-mea{
+  top:calc(var(--pad) + var(--edm-h) + var(--gap)); /* empieza debajo de EDM */
+  right:var(--pad);
+  bottom:var(--pad);
+  width:var(--sidebar);
+}
+
+/* Todo lo real (dominios/cards) encima del marco */
+.board > .domain{ z-index:1; }
+
+/* ====== Dominios ====== */
 .domain{
   background:var(--panel);
   border:1px solid var(--border);
   border-radius:12px;
   display:flex;
   flex-direction:column;
-  min-height:140px;
+  overflow:hidden;
 }
+
+/* Áreas del grid */
+.domain--edm{ grid-area:edm; height:var(--edm-h); }
+.domain--apo{ grid-area:apo; min-height:360px; }
+.domain--bai{ grid-area:bai; min-height:280px; }
+.domain--dss{ grid-area:dss; min-height:200px; }
+.domain--mea{ grid-area:mea; min-height:100%; }
+
+/* Cabecera de dominio */
 .domain-header{
   background:var(--cobit-magenta);
   color:#fff;
-  padding:8px 12px;
-  border-radius:12px 12px 0 0;
+  padding:10px 14px;
   font-weight:700;
   letter-spacing:.3px;
 }
+
+/* Cuerpo de cada dominio */
 .domain-body{
   padding:12px;
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:12px;
   align-content:flex-start;
 }
 
-/* Áreas del grid */
-.domain--edm{ grid-area: edm; }
-.domain--apo{ grid-area: apo; }
-.domain--bai{ grid-area: bai; }
-.domain--dss{ grid-area: dss; }
-.domain--mea{ grid-area: mea; }
+/* MEA en columna: tarjetas apiladas */
+.domain--mea .domain-body{ flex-direction:column; }
 
-/* Tarjetas de objetivos */
+/* ====== Tarjetas de objetivo ====== */
 .obj-card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:10px;
-  min-width:220px;
-  max-width:260px;
-  padding:10px 10px 12px;
+  border-radius:12px;
+  padding:10px 12px 12px;
   display:flex;
   flex-direction:column;
   gap:8px;
   cursor:pointer;
   transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.obj-card:hover{
-  transform: translateY(-1px);
-  border-color:#4b4b4b;
-}
-.obj-card.selected{
-  border-color:var(--cobit-blue);
-  box-shadow:0 0 0 2px rgba(4,60,124,.18);
-}
 
-.obj-title{
-  display:flex;
-  gap:8px;
-  align-items:flex-start;
-}
+/* Distribución por dominio */
+.domain--edm .obj-card{ flex:1 1 18%; min-width:200px; max-width:240px; }
+.domain--apo .obj-card,
+.domain--bai .obj-card,
+.domain--dss .obj-card{ flex:1 1 23%; min-width:220px; max-width:260px; }
+.domain--mea .obj-card{ width:100%; }
+
+/* Hover/selección */
+.obj-card:hover{ transform:translateY(-1px); border-color:#4b4b4b; }
+.obj-card.selected{ border-color:var(--cobit-blue); box-shadow:0 0 0 2px rgba(4,60,124,.18); }
+
+/* Título dentro de la tarjeta */
+.obj-title{ display:flex; gap:10px; align-items:flex-start; }
 .badge{
   padding:2px 8px;
   border-radius:999px;
@@ -127,71 +173,85 @@ body{
   background:var(--cobit-blue);
   flex-shrink:0;
 }
-.obj-name{
-  font-size:13px;
-  line-height:1.25;
-}
+.obj-name{ font-size:13px; line-height:1.25; }
 
-/* Selector de capacidad (se muestra al seleccionar) */
-.capacity{
-  display:none;
-  gap:8px;
-  align-items:center;
-}
-.obj-card.selected .capacity{
-  display:flex;
-}
-.capacity label{
-  font-size:12px; color:var(--muted);
-}
+/* Selector de capacidad */
+.capacity{ display:none; gap:8px; align-items:center; }
+.obj-card.selected .capacity{ display:flex; }
+.capacity label{ font-size:12px; color:var(--muted); }
 .capacity select{
-  background:#1f1f1f;
-  color:var(--text);
+  background:#1f1f1f; color:var(--text);
   border:1px solid var(--border);
-  border-radius:8px;
-  padding:6px 8px;
-  font-size:13px;
+  border-radius:8px; padding:6px 8px; font-size:13px;
 }
 
-/* Pie de acciones */
+/* ====== Pie de acciones ====== */
 .actionbar{
-  position:sticky;
-  bottom:0;
+  position:sticky; bottom:0;
   background:var(--panel);
   border-top:1px solid var(--border);
   padding:12px 16px;
-  display:flex;
-  gap:12px;
-  align-items:center;
-  justify-content:space-between;
+  display:flex; gap:12px; align-items:center; justify-content:space-between;
 }
-.status{
-  color:var(--muted);
-  font-size:14px;
-}
+.status{ color:var(--muted); font-size:14px; }
 button.primary{
-  background:var(--cobit-blue);
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:10px;
-  font-size:14px;
-  cursor:pointer;
+  background:var(--cobit-blue); color:#fff;
+  border:none; padding:10px 16px; border-radius:10px; font-size:14px; cursor:pointer;
 }
-button.primary:disabled{
-  opacity:.55;
-  cursor:not-allowed;
+button.primary:disabled{ opacity:.55; cursor:not-allowed; }
+
+/* ====== Responsive ====== */
+@media (max-width: 1200px){
+  :root{ --sidebar:280px; }
+  .board{
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-areas:
+      "edm edm edm edm edm"
+      "mea mea mea mea mea"
+      "apo apo apo apo apo"
+      "bai bai bai bai bai"
+      "dss dss dss dss dss";
+  }
+  /* En apilado, los marcos ocupan ancho completo según sección */
+  .board > .frame-left{
+    top:calc(var(--pad) + var(--edm-h) + var(--gap));
+    left:var(--pad); right:var(--pad);
+    bottom:calc(40%); /* aproximación visual */
+  }
+  .board > .frame-mea{
+    top:calc(var(--pad) + var(--edm-h) + var(--gap));
+    left:var(--pad); right:var(--pad);
+    width:auto; height:auto; bottom:auto;
+  }
+}/* --- Fila EDM: deja crecer el contenido y aumenta el alto mínimo --- */
+.domain--edm{
+  min-height: 170px;   /* antes 120px; sube si lo quieres más holgado */
+  overflow: visible;   /* permite que el select se vea completo */
 }
 
-/* Pequeño ajuste para pantallas medianas */
-@media (max-width: 1200px){
-  .board{
-    grid-template-columns: 1fr 1fr 1fr 1fr; 
-    grid-template-areas:
-      "edm edm edm edm"
-      "mea mea mea mea"
-      "apo apo apo apo"
-      "bai bai bai bai"
-      "dss dss dss dss";
-  }
+/* ==== FIX: color uniforme en los gaps del grid ==== */
+.board{
+  position: relative;
+  isolation: isolate;               /* crea un stacking context propio */
+  background: transparent !important;
 }
+
+/* Capa base que pinta el mismo color en todos los canales del grid */
+.board::before{
+  content: "";
+  position: absolute;
+  inset: var(--pad);                /* respeta el padding que ya usas */
+  background: var(--frame-bg);      /* <-- este es el color de las “grillas” */
+  border-radius: 10px;
+  z-index: 0;                       /* detrás de dominios y frames */
+}
+
+/* Los frames quedan SOLO con borde, sin relleno */
+.board > .frame-left,
+.board > .frame-mea{
+  background: transparent !important;
+  z-index: 2;                       /* por encima de la capa base */
+}
+
+/* Asegura que dominios queden por encima de la base */
+.board > .domain{ z-index: 3; }
