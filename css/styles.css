@@ -303,3 +303,36 @@ text { fill: var(--c-text); font-size: 12px; pointer-events: none; }
 text { 
   pointer-events: none; 
 }
+/* Botón "Cargar ecosistema" en el header */
+header { position: relative; }
+
+.btn-ecosistema{
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--c-primary, #043c7c);
+  color: var(--c-text, #fff);
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.btn-ecosistema:hover{
+  background: var(--c-primary-700, #032f61);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+/* En pantallas pequeñas, que no tape el título */
+@media (max-width: 640px){
+  .btn-ecosistema{
+    top: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

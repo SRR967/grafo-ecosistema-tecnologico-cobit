@@ -9,6 +9,9 @@ const objetivoSelect        = document.getElementById("objetivoSelect");
 const selectedTagsContainer = document.getElementById("selected-tags");
 const resetBtn              = document.getElementById("resetBtn");
 
+// (Se creará dinámicamente) selector para capacidad
+let capacidadSelect = null;
+
 const width  = window.innerWidth - 300; // 300 = ancho del panel izquierdo
 const height = window.innerHeight;
 
@@ -122,6 +125,9 @@ function buildIconCandidates(node) {
   return Array.from(new Set(candidates));
 }
 
+// Normalizador de herramienta (para cruzar actividades ↔ nodos)
+const normTool = s => (s || "").toString().trim().toLowerCase();
+
 // Drag para <g.node>
 function drag(simulation) {
   return d3.drag()
@@ -139,10 +145,33 @@ function clearHighlight() {
   if (labelSel) labelSel.attr("opacity", 1).attr("filter", null);
 }
 
-// ================== Carga de datos y render ==================
-d3.json("data/grafo.json").then((data) => {
-  const allNodes = data.nodes;
-  const allLinks = data.links; // {source: objetivoId, target: herramientaId}
+// ================== Carga de datos (grafo + actividades) ==================
+Promise.all([
+  d3.json("data/grafo.json"),        // {nodes:[...], links:[{source: objetivoId, target: herramientaId}]}
+  d3.json("data/actividades.json"),  // [{id, nombre, practicas:[{id, nombre, actividades:[{nivel_capacidad, herramienta, ...}], ...}]}]
+]).then(([grafoData, actData]) => {
+  const allNodes = grafoData.nodes;
+  const allLinks = grafoData.links;
+
+  // ------- Índice de niveles por (objetivo -> herramienta -> minNivel) -------
+  // Si una herramienta aparece con distintos niveles, guardamos el MÍNIMO
+  // para que "≤ capacidad seleccionada" incluya correctamente.
+  const capIndex = new Map(); // objId -> Map(toolLower -> minNivel)
+  actData.forEach(obj => {
+    const objId = obj.id;
+    if (!capIndex.has(objId)) capIndex.set(objId, new Map());
+    const mapTool = capIndex.get(objId);
+
+    (obj.practicas || []).forEach(p => {
+      (p.actividades || []).forEach(a => {
+        const lvl = typeof a.nivel_capacidad === "number" ? a.nivel_capacidad : null;
+        const tool = normTool(a.herramienta);
+        if (!tool || lvl == null) return;
+        const prev = mapTool.get(tool);
+        mapTool.set(tool, prev == null ? lvl : Math.min(prev, lvl));
+      });
+    });
+  });
 
   // ------- Datos del Excel (si existen) -------
   const userRefsRaw  = JSON.parse(localStorage.getItem('userRefs') || "[]");    // ej: ["EDM01","APO02"]
@@ -152,9 +181,9 @@ d3.json("data/grafo.json").then((data) => {
   const objetivosAll = allNodes.filter(d => d.tipo === "objetivo");
   const allowedRefs  = Array.isArray(userRefsRaw) && userRefsRaw.length
     ? userRefsRaw.filter(id => objetivosAll.some(o => o.id === id))
-    : []; // si vacío => no hay Excel o no coincide nada; se muestran todos como antes
+    : [];
 
-  // --------- Grados globales de herramientas ---------
+  // --------- Grados globales de herramientas (para tamaño) ---------
   const toolDegree = {};
   allLinks.forEach((l) => { toolDegree[l.target] = (toolDegree[l.target] || 0) + 1; });
   const toolMax   = d3.max(Object.values(toolDegree)) || 1;
@@ -182,47 +211,97 @@ d3.json("data/grafo.json").then((data) => {
     objetivoSelect.appendChild(option);
   });
 
-  function renderGraph(filteredObjetivos = []) {
+  // ---------- Crear selector de "nivel de capacidad (máximo)" ----------
+  const filterPanel = document.getElementById("filter-panel");
+  const capWrapper = document.createElement("div");
+  capWrapper.style.width = "100%";
+  capWrapper.style.marginTop = "12px";
+
+  const capLabel = document.createElement("label");
+  capLabel.setAttribute("for", "capacidadMaxSelect");
+  capLabel.innerHTML = "<strong>Nivel de capacidad (máximo):</strong>";
+
+  capacidadSelect = document.createElement("select");
+  capacidadSelect.id = "capacidadMaxSelect";
+  capacidadSelect.style.width = "100%";
+  capacidadSelect.style.marginTop = "6px";
+
+  const capOpts = [
+    {v:"",  t:"Todos los niveles"},
+    {v:"1", t:"≤ 1"},
+    {v:"2", t:"≤ 2"},
+    {v:"3", t:"≤ 3"},
+    {v:"4", t:"≤ 4"},
+    {v:"5", t:"≤ 5"},
+  ];
+  capOpts.forEach(o => {
+    const op = document.createElement("option");
+    op.value = o.v; op.textContent = o.t;
+    capacidadSelect.appendChild(op);
+  });
+
+  capWrapper.appendChild(capLabel);
+  capWrapper.appendChild(capacidadSelect);
+  filterPanel.insertBefore(capWrapper, filterPanel.querySelector(".button-group"));
+
+  // ---------- Render ----------
+
+  function renderGraph(filteredObjetivos = [], capMaxStr = "") {
     container.selectAll("*").remove();
     currentFocusId = null;
+
+    const capMax = capMaxStr ? parseInt(capMaxStr, 10) : null;
 
     let nodesToShow = [];
     let linksToShow = [];
 
-    // Si hay Excel: graficar SOLO allowedRefs (o su intersección con lo seleccionado)
-    if (allowedRefs.length) {
-      const baseRefs = filteredObjetivos.length
-        ? Array.from(new Set(filteredObjetivos.filter(id => allowedRefs.includes(id))))
-        : allowedRefs.slice();
+    // Base de objetivos a mostrar (Excel o todos)
+    const baseObjetivos = (allowedRefs.length
+      ? (filteredObjetivos.length ? filteredObjetivos.filter(id => allowedRefs.includes(id)) : allowedRefs)
+      : (filteredObjetivos.length ? filteredObjetivos : objetivosAll.map(o => o.id))
+    );
 
-      const set = new Set(baseRefs);
+    const baseSet = new Set(baseObjetivos);
 
-      // Objetivos permitidos + inyectar madurez
-      const objetivosKept = allNodes.filter(n => n.tipo === "objetivo" && set.has(n.id));
-      objetivosKept.forEach(n => { n.madurez = maturityMap[n.id] ?? n.madurez ?? ""; });
+    // Objetivos
+    const objetivosKept = allNodes.filter(n => n.tipo === "objetivo" && baseSet.has(n.id));
+    // inyectar madurez desde Excel si está
+    objetivosKept.forEach(n => { n.madurez = maturityMap[n.id] ?? n.madurez ?? ""; });
 
-      nodesToShow.push(...objetivosKept);
+    nodesToShow.push(...objetivosKept);
 
-      // Enlaces/herramientas conectadas a esos objetivos
-      allLinks.forEach((l) => {
-        if (set.has(l.source)) {
-          const o = allNodes.find(n => n.id === l.source);
-          const h = allNodes.find(n => n.id === l.target);
-          if (o && h) {
-            nodesToShow.push(h);
-            linksToShow.push({ source: o, target: h });
-          }
+    // Enlaces/herramientas condicionados por nivel de capacidad
+    allLinks.forEach((l) => {
+      if (!baseSet.has(l.source)) return;
+
+      // Si no hay filtro de capacidad: incluir todo como siempre
+      if (capMax == null) {
+        const o = allNodes.find(n => n.id === l.source);
+        const h = allNodes.find(n => n.id === l.target);
+        if (o && h) {
+          nodesToShow.push(h);
+          linksToShow.push({ source: o, target: h });
         }
-      });
-    } else {
-      // Sin Excel: comportamiento original
-      nodesToShow = [...allNodes];
-      linksToShow = allLinks.map(l => ({
-        source: allNodes.find(n => n.id === l.source),
-        target: allNodes.find(n => n.id === l.target),
-      }));
-    }
+        return;
+      }
 
+      // Con filtro de capacidad: incluir herramienta solo si
+      // hay al menos una actividad con nivel ≤ capMax para (objetivo, herramienta)
+      const mapTool = capIndex.get(l.source);
+      if (!mapTool) return;
+      const minNivel = mapTool.get(normTool(l.target));
+      if (minNivel == null) return;      // no hay actividad con nivel informado
+      if (minNivel > capMax) return;     // la mínima es mayor al filtro
+
+      const o = allNodes.find(n => n.id === l.source);
+      const h = allNodes.find(n => n.id === l.target);
+      if (o && h) {
+        nodesToShow.push(h);
+        linksToShow.push({ source: o, target: h });
+      }
+    });
+
+    // Quitar duplicados de nodos
     nodesToShow = Array.from(new Map(nodesToShow.map(n => [n.id, n])).values());
 
     const simulation = d3
@@ -251,11 +330,12 @@ d3.json("data/grafo.json").then((data) => {
       .enter()
       .append("g")
       .attr("class", "node")
+      .style("cursor", "pointer")
       .call(drag(simulation))
       .on("click", (event, d) => {
         if (clickTimer) clearTimeout(clickTimer);
         clickTimer = setTimeout(() => {
-          mostrarInfo(d);
+          mostrarInfo(d, capMax);
           toggleHighlight(d);
           clickTimer = null;
         }, CLICK_DELAY);
@@ -266,6 +346,8 @@ d3.json("data/grafo.json").then((data) => {
         closeInfoPanel();
         if (d.tipo === "objetivo") {
           localStorage.setItem("filtroObjetivos", JSON.stringify([d.id]));
+          // Si quieres pasar el cap a la tabla en el futuro:
+          // localStorage.setItem("capacidadMaxTabla", capacidadSelect.value || "");
           window.location.href = "tabla.html";
         }
         event.stopPropagation();
@@ -344,9 +426,7 @@ d3.json("data/grafo.json").then((data) => {
   }
 
   // Render inicial
-  // - Con Excel: muestra SOLO los objetivos de allowedRefs (sin necesidad de preseleccionar chips)
-  // - Sin Excel: comportamiento original (todos)
-  renderGraph([]);
+  renderGraph([], "");
 
   // ===== Persistencia desde tabla -> grafo =====
   const filtroDesdeTabla = localStorage.getItem("filtroDesdeTabla");
@@ -367,6 +447,11 @@ d3.json("data/grafo.json").then((data) => {
     updateSelectedTags();
   });
 
+  // Filtro por capacidad
+  capacidadSelect.addEventListener("change", () => {
+    updateSelectedTags(); // reusa el mismo flujo de render
+  });
+
   function updateSelectedTags() {
     selectedTagsContainer.innerHTML = "";
     const selectedOptions = Array.from(objetivoSelect.selectedOptions);
@@ -377,7 +462,7 @@ d3.json("data/grafo.json").then((data) => {
       selectedTagsContainer.appendChild(tag);
     });
     const selectedValues = selectedOptions.map((opt) => opt.value);
-    renderGraph(selectedValues);
+    renderGraph(selectedValues, capacidadSelect.value || "");
   }
 
   selectedTagsContainer.addEventListener("click", (e) => {
@@ -392,22 +477,25 @@ d3.json("data/grafo.json").then((data) => {
   resetBtn.addEventListener("click", () => {
     [...objetivoSelect.options].forEach((opt) => (opt.selected = false));
     selectedTagsContainer.innerHTML = "";
-    renderGraph([]); // con Excel: vuelve a mostrar todas las refs del Excel
+    if (capacidadSelect) capacidadSelect.value = ""; // reset filtro capacidad
+    renderGraph([], "");
     clearHighlight();
     closeInfoPanel();
   });
 
   // ===== Drawer info =====
-  function mostrarInfo(d) {
+  function mostrarInfo(d, capMax) {
     if (d.tipo === "objetivo") {
       const mad = d.madurez ?? (maturityMap[d.id] || "-");
+      const capTxt = capMax == null ? "Todos" : `≤ ${capMax}`;
       infoContentEl.innerHTML = `
         <h2>${d.id} - ${d.nombre}</h2>
+        <p><strong>Nivel de capacidad (filtro actual):</strong> ${capTxt}</p>
         <p><strong>Nivel de madurez (Excel):</strong> ${mad || "-"}</p>
         <p><strong>Descripción:</strong> ${d.descripcion || "-"}</p>
         <p><strong>Propósito:</strong> ${d.proposito || "-"}</p>
-        <h3>Herramientas asociadas:</h3>
-        <ul>${d.herramientas ? d.herramientas.map((h) => `<li>${h}</li>`).join("") : "<li>-</li>"}</ul>
+        <h3>Herramientas asociadas (según filtro):</h3>
+        <p style="opacity:.8">Solo se muestran en el grafo las herramientas con actividades a nivel ≤ filtro seleccionado.</p>
       `;
     } else {
       infoContentEl.innerHTML = `
@@ -451,12 +539,16 @@ d3.json("data/grafo.json").then((data) => {
   }
 });
 
-// ============ Botón "Ver tabla" ============
+// ============ Botón "Mas detalles" ============
 document.getElementById("verTablaBtn").addEventListener("click", () => {
   const selectedValues = Array.from(document.getElementById("objetivoSelect").selectedOptions).map((opt) => opt.value);
-  if (selectedValues.length === 0) window.location.href = "tabla.html";
-  else {
+  if (selectedValues.length === 0) {
+    window.location.href = "tabla.html";
+  } else {
     localStorage.setItem("filtroObjetivos", JSON.stringify(selectedValues));
+    // Si quieres que la tabla reciba el filtro de capacidad:
+    const capVal = (document.getElementById("capacidadMaxSelect") || {}).value || "";
+    localStorage.setItem("capacidadMaxTabla", capVal);
     window.location.href = "tabla.html";
   }
 });

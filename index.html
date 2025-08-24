@@ -10,13 +10,15 @@
 
 <body>
   <header>
+    <!-- Botón superior derecho -->
+    <a href="ecosistema.html" id="btnCargarEcosistema" class="btn-ecosistema">Cargar ecosistema</a>
+
     <h1>Ecosistema tecnologico para la implementación de hojas de ruta COBIT 2019</h1>
     <p>Esta plataforma fue desarrollada como parte de un ecosistema tecnológico para la implementación de hojas de ruta
       basadas en COBIT 2019.
       A través de este grafo podrás visualizar de manera interactiva cómo se conectan los Objetivos de Gobierno y
       Gestión (OGG) con herramientas de TI que apoyan su ejecución, ayudando a traducir el “qué hacer” de COBIT en
       acciones concretas.
-
     </p>
   </header>
 
@@ -32,7 +34,6 @@
         <button id="resetBtn">Mostrar todos</button>
         <button id="verTablaBtn">Mas detalles</button>
       </div>
-
     </aside>
 
     <!-- Grafo en el centro -->
@@ -43,22 +44,20 @@
     <!-- Panel de información a la derecha (drawer) -->
     <div id="infoPanel" class="drawer">
       <button id="closeInfo" class="drawer-close" aria-label="Cerrar panel">×</button>
-    <div id="infoContent">
-    <h2>Selecciona un nodo</h2>
-    <p>Aquí aparecerá información detallada del nodo.</p>
+      <div id="infoContent">
+        <h2>Selecciona un nodo</h2>
+        <p>Aquí aparecerá información detallada del nodo.</p>
+      </div>
     </div>
-</div>
 
-<!-- Capa oscura para cerrar al hacer clic fuera -->
-<div id="infoOverlay" class="drawer-overlay"></div>
-
+    <!-- Capa oscura para cerrar al hacer clic fuera -->
+    <div id="infoOverlay" class="drawer-overlay"></div>
   </main>
 
   <footer>
     <p>© 2025 · Proyecto de grado – Ecosistema Tecnológico para la Implementación de Hojas de Ruta de COBIT 2019
       Desarrollado por: Johana Paola Palacio Osorio · Jesús Santiago Ramón Ramos · Jhoan Esteban Soler Giraldo
       Facultad de Ingeniería – Universidad del Quindío
-
     </p>
   </footer>
 

@@ -70,6 +70,7 @@ table {
 
 thead { background: #2b2f36; }
 
+
 th, td {
   border: 1px solid var(--c-border-2);
   padding: 8px;
@@ -77,7 +78,7 @@ th, td {
   vertical-align: top;
 }
 
-th { color: var(--c-primary); }
+th { color: var(--c-text-sub); }
 tbody tr:nth-child(even) { background: #242424; }
 #tabla-cobit tbody tr:hover { background-color: #2f2f2f; }
 
