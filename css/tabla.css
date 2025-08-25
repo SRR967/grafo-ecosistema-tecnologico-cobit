@@ -336,3 +336,20 @@ tbody tr:nth-child(even) { background: #242424; }
   line-height: 1;
 }
 .chip.muted { opacity: .75; }
+
+/* === BOTÓN EXPORTAR REPORTE === */
+.btn-exportar{
+  position: fixed;
+  top: 20px;
+  right: 120px; /* para no chocar con el botón Ajustes */
+  background: var(--c-accent);
+  color: var(--c-text);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 999;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+.btn-exportar:hover{ background: var(--c-accent-700); }
