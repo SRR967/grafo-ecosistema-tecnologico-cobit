@@ -302,245 +302,340 @@ document.getElementById("limpiarObjetivos").addEventListener("click", () => {
   actualizarTagsObjetivos(); aplicarFiltros();
 });
 
-document.getElementById("btnExportar")?.addEventListener("click", exportarReporte);
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("btnExportar");
+  if (btn) btn.addEventListener("click", exportarReporte);
+});
 
 // ---------- Exportador PDF (simple, sin colores) ----------
 // ====================== Exportador SIN librerías ======================
-function exportarReporte() {
-  // 1) Fuente: lo que se está mostrando (respeta filtros)
-  const dataset = (Array.isArray(window.filtrosActivos) && window.filtrosActivos.length)
-    ? window.filtrosActivos
-    : (Array.isArray(window.dataGlobal) ? window.dataGlobal : []);
-
-  if (!dataset || dataset.length === 0) {
-    alert("No hay datos para exportar.");
+// ====== Exportar PDF: "Reporte del ecosistema tecnológico" ======
+async function exportarReporte () {
+  // Validaciones de librerías
+  const { jsPDF } = (window.jspdf || {});
+  if (!jsPDF) { alert("Falta jsPDF en la página"); return; }
+  if (!jsPDF.API || typeof jsPDF.API.autoTable !== "function") {
+    alert("Falta el plugin jsPDF-Autotable");
     return;
   }
 
-  // 2) Helpers
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, m =>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const domainName = (id) => {
-    const p = String(id||"").slice(0,3).toUpperCase();
-    return ["EDM","APO","BAI","DSS","MEA"].includes(p) ? p : "N/D";
-  };
-  const normHerr = (h) => {
-    if (!h) return "-";
-    const t = String(h).trim();
-    return (!t || t.toLowerCase() === "n/a") ? "-" : t;
+  // ----------------- Helpers locales -----------------
+  const DOM_KEYS = ["EDM", "APO", "BAI", "DSS", "MEA"];
+
+  const dominioDe = (id) => {
+    const pref = String(id).slice(0, 3).toUpperCase();
+    return DOM_KEYS.includes(pref) ? pref : "OTR";
   };
 
-  // 3) Aplanar filas (como la tabla, sin paginar)
-  const filas = [];
-  dataset.forEach(obj => {
-    (obj.practicas || []).forEach(pr => {
-      (pr.actividades || []).forEach(act => {
-        filas.push({
-          objetivoId: obj.id,
-          objetivo: `${obj.id} - ${obj.nombre}`,
-          practica: `${pr.id} - ${pr.nombre}`,
-          actividad: `${act.id} - ${act.descripcion || "-"}`,
-          nivel: act.nivel_capacidad ?? "-",
-          herramienta: normHerr(act.herramienta),
-          justificacion: act.justificacion || "-",
-          observaciones: act.observaciones || "-",
-          integracion: act.integracion || "-",
-          dominio: domainName(obj.id)
+  const normHerr = (h) => {
+    if (h == null) return "-";
+    const t = String(h).trim();
+    return (!t || t.toLowerCase() === "n/a" || t === "-") ? "-" : t;
+  };
+
+  // Aplana data a filas básicas
+  async function getFilas() {
+    const src = (typeof dataGlobal !== "undefined" && Array.isArray(dataGlobal) && dataGlobal.length)
+      ? dataGlobal
+      : await fetch("data/actividades.json", { cache: "no-store" }).then(r => r.json());
+
+    const out = [];
+    (src || []).forEach(obj => {
+      (obj.practicas || []).forEach(pr => {
+        (pr.actividades || []).forEach(a => {
+          out.push({
+            objetivo: `${obj.id} - ${obj.nombre || "-"}`,
+            objetivo_id: obj.id,
+            practica: `${pr.id} - ${pr.nombre || "-"}`,
+            actividad: `${a.id} - ${a.descripcion || "-"}`,
+            nivel_capacidad: a?.nivel_capacidad ?? "-",
+            herramienta: normHerr(a?.herramienta),
+            justificacion: a?.justificacion || "-",
+            observaciones: a?.observaciones || "-",
+            integracion: a?.integracion || "-"
+          });
         });
       });
     });
-  });
+    return out;
+  }
 
-  // 4) Resúmenes
-  const domCob = new Map(); // dominio -> {acts}
-  const objPorDom = new Map(); // dominio -> Set objetivos
-  const topHerr = new Map(); // herramienta -> count
-  const niveles = {1:0,2:0,3:0,4:0,5:0,"-":0};
+  // Agregados
+  function mapaCobertura(filas) {
+    const porDomObj = new Map(); // objetivos únicos por dominio
+    const porDomAct = new Map(); // actividades por dominio
+    const vistos = new Set();
 
-  dataset.forEach(o => {
-    const d = domainName(o.id);
-    if (!objPorDom.has(d)) objPorDom.set(d, new Set());
-    objPorDom.get(d).add(o.id);
-  });
-  filas.forEach(f => {
-    if (!domCob.has(f.dominio)) domCob.set(f.dominio, {acts:0});
-    domCob.get(f.dominio).acts += 1;
-    const h = normHerr(f.herramienta);
-    topHerr.set(h, (topHerr.get(h) || 0) + 1);
-    const nv = (f.nivel === "-" ? "-" : Number(f.nivel));
-    if (niveles[nv] !== undefined) niveles[nv] += 1; else niveles["-"] += 1;
-  });
+    for (const f of filas) {
+      const dom = dominioDe(f.objetivo_id);
+      if (!vistos.has(f.objetivo_id)) {
+        vistos.add(f.objetivo_id);
+        porDomObj.set(dom, (porDomObj.get(dom) || 0) + 1);
+      }
+      porDomAct.set(dom, (porDomAct.get(dom) || 0) + 1);
+    }
+    return {
+      objetivos: DOM_KEYS.map(d => ({ dominio: d, count: porDomObj.get(d) || 0 })),
+      actividades: DOM_KEYS.map(d => ({ dominio: d, count: porDomAct.get(d) || 0 })),
+    };
+  }
 
-  const coberturaRows = ["EDM","APO","BAI","DSS","MEA"].map(dom => {
-    const objs = (objPorDom.get(dom) ? objPorDom.get(dom).size : 0);
-    const acts = (domCob.get(dom) ? domCob.get(dom).acts : 0);
-    return `<tr><td>${dom}</td><td>${objs}</td><td>${acts}</td></tr>`;
-  }).join("");
+  function conteoNiveles(filas) {
+    const m = new Map();
+    for (const f of filas) {
+      const n = Number(f.nivel_capacidad);
+      if (Number.isFinite(n)) m.set(n, (m.get(n) || 0) + 1);
+    }
+    return [1,2,3,4,5].map(n => ({ nivel: `Nivel ${n}`, count: m.get(n) || 0 }));
+  }
 
-  const topHerrRows = [...topHerr.entries()]
-    .filter(([h]) => h !== "-")
-    .sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]))
-    .slice(0,15)
-    .map(([h,c]) => `<tr><td>${esc(h)}</td><td>${c}</td></tr>`)
-    .join("");
-
-  const nivelesRows = [["1", niveles[1]],["2", niveles[2]],["3", niveles[3]],[ "4", niveles[4]],[ "5", niveles[5]]]
-    .map(([n,c]) => `<tr><td>${n}</td><td>${c}</td></tr>`).join("");
-
-  const nivelesIntro = (() => {
+  function nivelesAsignadosDesdeEcosistema() {
     const capMap = JSON.parse(localStorage.getItem("capacidadPorObjetivo") || "{}");
-    const selRefs = JSON.parse(localStorage.getItem("userRefs") || "[]");
-    if (!selRefs || !selRefs.length) return "";
-    const rows = selRefs.map(id => `<tr><td>${id}</td><td>${esc(capMap[id] ?? "-")}</td></tr>`).join("");
-    return `
-      <div class="section">
-        <h2>Niveles asignados en Hoja de Ruta</h2>
-        <table class="t small">
-          <thead><tr><th>Objetivo</th><th>Nivel</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    `;
-  })();
-
-  // 5) Tabla maestra
-  const masterRows = filas.map(f => `
-    <tr>
-      <td>${esc(f.objetivo)}</td>
-      <td>${esc(f.practica)}</td>
-      <td>${esc(f.actividad)}</td>
-      <td class="c">${esc(f.nivel)}</td>
-      <td>${esc(f.herramienta)}</td>
-      <td>${esc(f.justificacion)}</td>
-      <td>${esc(f.observaciones)}</td>
-      <td>${esc(f.integracion)}</td>
-    </tr>
-  `).join("");
-
-  // 6) Texto de introducción (con créditos)
-  const introTexto = `Este reporte consolida, a partir de los filtros vigentes, la trazabilidad entre los Objetivos de Gobierno y Gestión (OGG) de COBIT 2019, sus prácticas y actividades operativas, y las herramientas tecnológicas que soportan su ejecución. Su propósito es ofrecer una visión auditable y accionable del ecosistema actual: qué objetivos están siendo abordados, con qué profundidad (niveles de capacidad 1–5) y con qué evidencias (justificación técnica, observaciones e integraciones) se respalda su implementación. Metodológicamente, una actividad queda dentro del alcance si pertenece a un objetivo seleccionado y su nivel de capacidad es ≤ al nivel definido para ese objetivo en la hoja de ruta; en caso contrario se excluye. Las métricas de cobertura por dominio (EDM/APO/BAI/DSS/MEA) permiten identificar brechas, oportunidades de reutilización de herramientas y prioridades de mejora. El apartado de “Top herramientas” refleja frecuencia de uso (no criticidad) y la Tabla maestra preserva la relación OGG→Práctica→Actividad sin paginación, facilitando verificación y planeación. Este documento forma parte del trabajo de grado “Ecosistema Tecnológico para la Implementación de Hojas de Ruta de COBIT 2019”, elaborado por Johana Paola Palacio Osorio, Jesús Santiago Ramón Ramos y Jhoan Esteban Soler Giraldo.`;
-
-  // 7) Plantilla HTML imprimible (A4)
-  const fecha = new Date().toLocaleString();
-  const html = `
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Reporte COBIT 2019 – Ecosistema</title>
-<style>
-  @page { size: A4; margin: 14mm; }
-  @media print { 
-    thead { display: table-header-group; }
-    tfoot { display: table-footer-group; }
-    .page-break { page-break-before: always; }
+    const refs   = JSON.parse(localStorage.getItem("userRefs") || "[]");
+    return refs
+      .filter(id => capMap[id] != null && String(capMap[id]).trim() !== "")
+      .map(id => ({ objetivo: id, nivel: String(capMap[id]) }));
   }
-  body{ font-family: "Segoe UI", Arial, sans-serif; color:#111; margin:0; }
-  .wrap{ padding: 0; }
-  h1{ font-size: 20px; margin: 0 0 6px; }
-  h2{ font-size: 16px; margin: 16px 0 6px; }
-  p{ font-size: 12px; line-height: 1.5; margin: 8px 0; text-align: justify; }
-  .muted{ color:#666; font-size: 12px; margin-bottom: 6px; }
-  .section{ margin-bottom: 10px; }
-  .t{ width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .t th, .t td { border: 1px solid #444; padding: 6px; font-size: 11.5px; vertical-align: top; word-wrap: break-word; }
-  .t thead{ background: #eee; }
-  .t.small th, .t.small td{ font-size: 11px; }
-  .c { text-align: center; }
-  /* Tabla maestra: anchos fijos con colgroup */
-  .master col.objetivo   { width: 16%; }
-  .master col.practica   { width: 16%; }
-  .master col.actividad  { width: 28%; }
-  .master col.nivel      { width: 6%;  }
-  .master col.herr       { width: 10%; }
-  .master col.justif     { width: 10%; }
-  .master col.obs        { width: 7%;  }
-  .master col.integ      { width: 7%;  }
-  .footer { position: fixed; bottom: 6mm; right: 14mm; font-size: 10px; color:#666; }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Reporte COBIT 2019 – Ecosistema</h1>
-    <div class="muted">Generado: ${esc(fecha)}</div>
-    <p>${esc(introTexto)}</p>
 
-    ${nivelesIntro}
-
-    <div class="section">
-      <h2>Cobertura por dominio</h2>
-      <table class="t small">
-        <thead><tr><th>Dominio</th><th># Objetivos</th><th># Actividades</th></tr></thead>
-        <tbody>${coberturaRows}</tbody>
-      </table>
-    </div>
-
-    <div class="section">
-      <h2>Top herramientas (por frecuencia de actividades)</h2>
-      <table class="t small">
-        <thead><tr><th>Herramienta</th><th>Actividades</th></tr></thead>
-        <tbody>${topHerrRows || "<tr><td colspan='2'>No hay datos</td></tr>"}</tbody>
-      </table>
-    </div>
-
-    <div class="section">
-      <h2>Conteo de actividades por nivel de capacidad</h2>
-      <table class="t small">
-        <thead><tr><th>Nivel</th><th>Actividades</th></tr></thead>
-        <tbody>${nivelesRows}</tbody>
-      </table>
-    </div>
-
-    <div class="section page-break">
-      <h2>Tabla maestra de actividades (alcance actual)</h2>
-      <table class="t master">
-        <colgroup>
-          <col class="objetivo"><col class="practica"><col class="actividad"><col class="nivel">
-          <col class="herr"><col class="justif"><col class="obs"><col class="integ">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Objetivo</th>
-            <th>Práctica</th>
-            <th>Actividad</th>
-            <th>Nivel</th>
-            <th>Herramienta</th>
-            <th>Justificación técnica</th>
-            <th>Obs.</th>
-            <th>Integración</th>
-          </tr>
-        </thead>
-        <tbody>${masterRows}</tbody>
-      </table>
-    </div>
-
-    <div class="footer">© 2025 · Proyecto de grado – Universidad del Quindío</div>
-  </div>
-  <script>
-    // Lanza impresión cuando cargue, para que puedas "Guardar como PDF"
-    window.onload = function(){ window.focus(); window.print(); };
-  </script>
-</body>
-</html>`.trim();
-
-  // 8) Abrir en nueva pestaña e inyectar el HTML (permite imprimir/guardar PDF)
-  const win = window.open("", "_blank");
-  if (!win) {
-    // Si el bloqueador de popups lo impide, intenta descarga del HTML
-    const blob = new Blob([html], {type: "text/html"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    const stamp = new Date().toISOString().slice(0,10);
-    a.download = `Reporte_COBIT_2019_Ecosistema_${stamp}.html`;
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-    a.remove();
-    alert("Popup bloqueado. Se descargó el HTML del reporte; ábrelo y usa Imprimir → Guardar como PDF.");
-    return;
+  function topHerramientas(filas) {
+    const m = new Map();
+    for (const f of filas) m.set(f.herramienta, (m.get(f.herramienta) || 0) + 1);
+    return [...m.entries()]
+      .sort((a, b) => {
+        if (a[0] === "-" && b[0] !== "-") return 1;
+        if (b[0] === "-" && a[0] !== "-") return -1;
+        return b[1] - a[1] || a[0].localeCompare(b[0]);
+      })
+      .map(([herramienta, count]) => ({ herramienta, count }));
   }
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
+
+  // Pie chart → dataURL PNG
+  function pieDataURL(pares, size = 360) {
+  // pares: [{ herramienta, count }]
+  // Normaliza top N y "Otros" si hay muchos
+  const MAX_SLICES = 12; // 11 + "Otros"
+  let data = [...pares];
+  if (data.length > MAX_SLICES) {
+    const top = data.slice(0, MAX_SLICES - 1);
+    const otros = data.slice(MAX_SLICES - 1);
+    const sumOtros = otros.reduce((s, x) => s + x.count, 0);
+    data = [...top, { herramienta: "Otros", count: sumOtros }];
+  }
+
+  // totales
+  const total = data.reduce((s, d) => s + d.count, 0) || 1;
+
+  // canvas
+  const PAD = 16;
+  const legendW = 200;            // ancho reservado a la derecha para leyenda
+  const W = size + legendW + PAD; // ancho total
+  const H = size;                 // alto total
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+
+  // centro y radios
+  const cx = size * 0.45;
+  const cy = size * 0.52;
+  const r  = Math.min(size * 0.40, H * 0.40);
+
+  // paleta determinística
+  function color(i) {
+    const hue = Math.floor((i * 37) % 360);
+    return `hsl(${hue},65%,60%)`;
+  }
+
+  // dibuja rebanadas
+  let ang = -Math.PI / 2;
+  data.forEach((d, i) => {
+    const frac = d.count / total;
+    const a2 = ang + frac * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.fillStyle = color(i);
+    ctx.arc(cx, cy, r, ang, a2);
+    ctx.closePath();
+    ctx.fill();
+
+    // etiqueta con línea (si la porción no es minúscula)
+    const mid = (ang + a2) / 2;
+    const minFracForLabel = 0.03; // 3%: si es menor, no va texto sobre el borde
+    if (frac >= minFracForLabel) {
+      const lx = cx + Math.cos(mid) * (r + 8);
+      const ly = cy + Math.sin(mid) * (r + 8);
+      const tx = cx + Math.cos(mid) * (r + 22);
+      const ty = cy + Math.sin(mid) * (r + 22);
+
+      ctx.strokeStyle = "#555";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(mid) * (r - 4), cy + Math.sin(mid) * (r - 4));
+      ctx.lineTo(lx, ly);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+
+      const pct = Math.round(frac * 100);
+      ctx.fillStyle = "#111";
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = (Math.cos(mid) >= 0) ? "left" : "right";
+      ctx.textBaseline = "middle";
+      ctx.fillText(`${pct}%`, tx + (Math.cos(mid) >= 0 ? 4 : -4), ty);
+    }
+
+    ang = a2;
+  });
+
+  // donut interior
+  ctx.beginPath();
+  ctx.fillStyle = "#fff";
+  ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+  ctx.fill();
+
+  // título en el centro
+  ctx.fillStyle = "#000";
+  ctx.font = "bold 14px sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Distribución por herramienta", cx, cy);
+
+  // LEYENDA a la derecha (todas las categorías, incl. “Otros”)
+  const xL = size + 24;
+  let yL = 18;
+  ctx.font = "12px sans-serif";
+  data.forEach((d, i) => {
+    const pct = Math.round((d.count / total) * 100);
+    // color box
+    ctx.fillStyle = color(i);
+    ctx.fillRect(xL, yL - 10, 12, 12);
+    // texto
+    ctx.fillStyle = "#111";
+    const label = `${d.herramienta} — ${d.count} (${pct}%)`;
+    ctx.fillText(label, xL + 18, yL);
+    yL += 16;
+  });
+
+  return c.toDataURL("image/png");
+}
+
+  // ----------------- Construcción del PDF -----------------
+  const filas = await getFilas();
+  const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+  const M = 36; // margen
+
+  // Portada
+  doc.setFont("helvetica", "bold").setFontSize(20);
+  doc.text("Reporte del ecosistema tecnológico", M, 70);
+
+  doc.setFont("helvetica", "normal").setFontSize(11);
+  const intro =
+    "Propósito: entregar un resumen ejecutable del avance del ecosistema tecnológico " +
+    "conforme a COBIT 2019, incluyendo cobertura por dominio, niveles de capacidad, " +
+    "uso de herramientas y el detalle completo de actividades. " +
+    "El documento fue elaborado por el equipo del proyecto para comunicar nivel de adopción, " +
+    "soporte de herramientas y trazabilidad de actividades.";
+  doc.text(doc.splitTextToSize(intro, 760), M, 100);
+
+  // 1) Mapa de cobertura
+  doc.setFont("helvetica", "bold").setFontSize(14);
+  doc.text("1) Mapa de cobertura por dominio", M, 150);
+  doc.setFont("helvetica", "normal").setFontSize(10);
+  doc.text("A continuación se presentan los dominios COBIT cubiertos por los objetivos y el número total de actividades asociadas.", M, 168);
+
+  const cobertura = mapaCobertura(filas);
+  doc.autoTable({
+    startY: 188, margin: { left: M },
+    head: [["Dominio", "# Objetivos"]],
+    body: cobertura.objetivos.map(x => [x.dominio, x.count]),
+    styles: { fontSize: 9 }, tableWidth: 340, theme: "grid"
+  });
+  const yAfter1 = doc.lastAutoTable.finalY;
+
+  doc.autoTable({
+    startY: 188, margin: { left: M + 360 },
+    head: [["Dominio", "# Actividades"]],
+    body: cobertura.actividades.map(x => [x.dominio, x.count]),
+    styles: { fontSize: 9 }, tableWidth: 340, theme: "grid"
+  });
+  let cursorY = Math.max(yAfter1, doc.lastAutoTable.finalY) + 18;
+
+  // 2) Niveles de capacidad
+  doc.setFont("helvetica", "bold").setFontSize(14);
+  doc.text("2) Niveles de capacidad", M, cursorY);
+  cursorY += 18;
+  doc.setFont("helvetica", "normal").setFontSize(10);
+  doc.text("Se detalla el conteo de actividades por nivel de capacidad y, si existe, el nivel objetivo asignado desde la vista de Ecosistema.", M, cursorY);
+  cursorY += 12;
+
+  const niveles = conteoNiveles(filas);
+  doc.autoTable({
+    startY: cursorY + 6, margin: { left: M },
+    head: [["Nivel", "# Actividades"]],
+    body: niveles.map(n => [n.nivel, n.count]),
+    styles: { fontSize: 9 }, tableWidth: 240, theme: "grid"
+  });
+  const yLeft = doc.lastAutoTable.finalY;
+
+  const nivelesEco = nivelesAsignadosDesdeEcosistema();
+  doc.autoTable({
+    startY: cursorY + 6, margin: { left: M + 260 },
+    head: [["Objetivo", "Nivel"]],
+    body: (nivelesEco.length ? nivelesEco : [{objetivo:"-", nivel:"-"}]).map(x => [x.objetivo, x.nivel]),
+    styles: { fontSize: 9 }, tableWidth: 280, theme: "grid"
+  });
+  cursorY = Math.max(yLeft, doc.lastAutoTable.finalY) + 18;
+
+  // 3) Resumen de herramientas + gráfico de torta
+  doc.setFont("helvetica", "bold").setFontSize(14);
+  doc.text("3) Resumen de herramientas", M, cursorY);
+  cursorY += 18;
+  doc.setFont("helvetica", "normal").setFontSize(10);
+  doc.text("Listado de herramientas utilizadas por las actividades y su participación relativa.", M, cursorY);
+  cursorY += 6;
+
+  const tops = topHerramientas(filas);
+  doc.autoTable({
+    startY: cursorY + 10, margin: { left: M },
+    head: [["Herramienta", "# Actividades"]],
+    body: (tops.length ? tops : [{herramienta:"-", count:0}]).map(t => [t.herramienta, t.count]),
+    styles: { fontSize: 9 }, tableWidth: 340, theme: "grid"
+  });
+  const yTbl = doc.lastAutoTable.finalY;
+
+  const pie = pieDataURL(tops.slice(0, 8));
+  doc.addImage(pie, "PNG", M + 360, cursorY + 0, 300, 220);
+
+  cursorY = Math.max(yTbl, cursorY + 230) + 24;
+
+  // 4) Tabla maestra de actividades (página nueva)
+  doc.addPage("landscape", "a4");
+  let y = 60;
+  doc.setFont("helvetica", "bold").setFontSize(14);
+  doc.text("4) Tabla maestra de actividades", M, y);
+  y += 18;
+  doc.setFont("helvetica", "normal").setFontSize(10);
+  doc.text("Se presenta la tabla completa de objetivos, prácticas y actividades, con nivel de capacidad y soporte de herramienta.", M, y);
+  y += 10;
+
+  doc.autoTable({
+    startY: y + 8,
+    margin: { left: M, right: M },
+    head: [["Objetivo", "Práctica", "Actividad", "Nivel", "Herramienta", "Justificación Técnica", "Observaciones", "Integración"]],
+    body: filas.map(f => [
+      f.objetivo, f.practica, f.actividad, String(f.nivel_capacidad ?? "-"),
+      f.herramienta, f.justificacion, f.observaciones, f.integracion
+    ]),
+    styles: { fontSize: 8, cellPadding: 3, overflow: "linebreak" },
+    headStyles: { fillColor: [4, 60, 124], textColor: 255 },
+    theme: "grid",
+    didDrawPage(data) {
+      // Header y paginación
+      doc.setFontSize(9).setTextColor(150);
+      doc.text("Reporte del ecosistema tecnológico", M, 30);
+      const str = `Página ${doc.internal.getNumberOfPages()}`;
+      doc.text(str, doc.internal.pageSize.getWidth() - M - doc.getTextWidth(str), 30);
+    }
+  });
+
+  // Guardar
+  doc.save("reporte_ecosistema.pdf");
 }
