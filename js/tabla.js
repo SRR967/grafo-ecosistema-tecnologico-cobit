@@ -310,34 +310,36 @@ document.addEventListener("DOMContentLoaded", () => {
 // ---------- Exportador PDF (simple, sin colores) ----------
 // ====================== Exportador SIN librerías ======================
 // ====== Exportar PDF: "Reporte del ecosistema tecnológico" ======
+// ====== Exportar PDF: "Reporte del ecosistema tecnológico" ======
 async function exportarReporte () {
-  // Validaciones de librerías
+  // 1) Validaciones de librerías
   const { jsPDF } = (window.jspdf || {});
   if (!jsPDF) { alert("Falta jsPDF en la página"); return; }
   if (!jsPDF.API || typeof jsPDF.API.autoTable !== "function") {
-    alert("Falta el plugin jsPDF-Autotable");
-    return;
+    alert("Falta el plugin jsPDF-Autotable"); return;
   }
 
-  // ----------------- Helpers locales -----------------
+  // ----------------- Helpers -----------------
   const DOM_KEYS = ["EDM", "APO", "BAI", "DSS", "MEA"];
 
   const dominioDe = (id) => {
     const pref = String(id).slice(0, 3).toUpperCase();
     return DOM_KEYS.includes(pref) ? pref : "OTR";
   };
-
   const normHerr = (h) => {
     if (h == null) return "-";
     const t = String(h).trim();
     return (!t || t.toLowerCase() === "n/a" || t === "-") ? "-" : t;
   };
 
-  // Aplana data a filas básicas
+  // Aplana data a filas básicas; prioriza filtros activos si existen
   async function getFilas() {
-    const src = (typeof dataGlobal !== "undefined" && Array.isArray(dataGlobal) && dataGlobal.length)
-      ? dataGlobal
-      : await fetch("data/actividades.json", { cache: "no-store" }).then(r => r.json());
+    const srcBase =
+      (typeof filtrosActivos !== "undefined" && Array.isArray(filtrosActivos) && filtrosActivos.length)
+        ? filtrosActivos
+        : (typeof dataGlobal !== "undefined" ? dataGlobal : null);
+
+    const src = srcBase || await fetch("data/actividades.json", { cache: "no-store" }).then(r => r.json());
 
     const out = [];
     (src || []).forEach(obj => {
@@ -360,10 +362,9 @@ async function exportarReporte () {
     return out;
   }
 
-  // Agregados
   function mapaCobertura(filas) {
-    const porDomObj = new Map(); // objetivos únicos por dominio
-    const porDomAct = new Map(); // actividades por dominio
+    const porDomObj = new Map();
+    const porDomAct = new Map();
     const vistos = new Set();
 
     for (const f of filas) {
@@ -409,10 +410,8 @@ async function exportarReporte () {
       .map(([herramienta, count]) => ({ herramienta, count }));
   }
 
-  // Pie chart → dataURL PNG
-  function pieDataURL(pares, size = 360) {
-  // pares: [{ herramienta, count }]
-  // Normaliza top N y "Otros" si hay muchos
+  // ----- Pie chart con leyenda y labels: devuelve {url, w, h} -----
+  function piePNG(pares, size = 360) {
   const MAX_SLICES = 12; // 11 + "Otros"
   let data = [...pares];
   if (data.length > MAX_SLICES) {
@@ -421,31 +420,27 @@ async function exportarReporte () {
     const sumOtros = otros.reduce((s, x) => s + x.count, 0);
     data = [...top, { herramienta: "Otros", count: sumOtros }];
   }
-
-  // totales
   const total = data.reduce((s, d) => s + d.count, 0) || 1;
 
-  // canvas
-  const PAD = 16;
-  const legendW = 200;            // ancho reservado a la derecha para leyenda
-  const W = size + legendW + PAD; // ancho total
-  const H = size;                 // alto total
+  const legendW = 240;           // espacio para leyenda a la derecha
+  const W = size + legendW;
+  const H = Math.max(300, size * 0.85);
+
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
   const ctx = c.getContext("2d");
 
-  // centro y radios
-  const cx = size * 0.45;
-  const cy = size * 0.52;
-  const r  = Math.min(size * 0.40, H * 0.40);
+  // <<< fondo opaco para que NO se vea nada detrás >>>
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, W, H);
 
-  // paleta determinística
-  function color(i) {
-    const hue = Math.floor((i * 37) % 360);
-    return `hsl(${hue},65%,60%)`;
-  }
+  const cx = size * 0.46;
+  const cy = H * 0.58;
+  const r  = Math.min(size * 0.42, H * 0.42);
 
-  // dibuja rebanadas
+  const color = (i) => `hsl(${Math.floor((i * 37) % 360)},65%,60%)`;
+
+  // rebanadas
   let ang = -Math.PI / 2;
   data.forEach((d, i) => {
     const frac = d.count / total;
@@ -457,16 +452,15 @@ async function exportarReporte () {
     ctx.closePath();
     ctx.fill();
 
-    // etiqueta con línea (si la porción no es minúscula)
+    // etiquetas con línea solo si la porción >= 3%
     const mid = (ang + a2) / 2;
-    const minFracForLabel = 0.03; // 3%: si es menor, no va texto sobre el borde
-    if (frac >= minFracForLabel) {
-      const lx = cx + Math.cos(mid) * (r + 8);
-      const ly = cy + Math.sin(mid) * (r + 8);
-      const tx = cx + Math.cos(mid) * (r + 22);
-      const ty = cy + Math.sin(mid) * (r + 22);
+    if (frac >= 0.03) {
+      const lx = cx + Math.cos(mid) * (r + 6);
+      const ly = cy + Math.sin(mid) * (r + 6);
+      const tx = cx + Math.cos(mid) * (r + 28);
+      const ty = cy + Math.sin(mid) * (r + 28);
 
-      ctx.strokeStyle = "#555";
+      ctx.strokeStyle = "#666";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(mid) * (r - 4), cy + Math.sin(mid) * (r - 4));
@@ -481,51 +475,42 @@ async function exportarReporte () {
       ctx.textBaseline = "middle";
       ctx.fillText(`${pct}%`, tx + (Math.cos(mid) >= 0 ? 4 : -4), ty);
     }
-
     ang = a2;
   });
 
-  // donut interior
+  // donut interior (blanco, SIN texto en el centro)
   ctx.beginPath();
   ctx.fillStyle = "#fff";
   ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
   ctx.fill();
 
-  // título en el centro
-  ctx.fillStyle = "#000";
-  ctx.font = "bold 14px sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("Distribución por herramienta", cx, cy);
-
-  // LEYENDA a la derecha (todas las categorías, incl. “Otros”)
-  const xL = size + 24;
-  let yL = 18;
+  // leyenda
+  const xL = size + 20;
+  let yL = 20;
   ctx.font = "12px sans-serif";
   data.forEach((d, i) => {
     const pct = Math.round((d.count / total) * 100);
-    // color box
     ctx.fillStyle = color(i);
     ctx.fillRect(xL, yL - 10, 12, 12);
-    // texto
     ctx.fillStyle = "#111";
-    const label = `${d.herramienta} — ${d.count} (${pct}%)`;
-    ctx.fillText(label, xL + 18, yL);
+    ctx.fillText(`${d.herramienta} — ${d.count} (${pct}%)`, xL + 18, yL);
     yL += 16;
   });
 
-  return c.toDataURL("image/png");
+  return { url: c.toDataURL("image/png"), w: W, h: H };
 }
+
 
   // ----------------- Construcción del PDF -----------------
   const filas = await getFilas();
+  if (!filas.length) { alert("No hay datos para exportar (revisa los filtros)."); return; }
+
   const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
-  const M = 36; // margen
+  const M = 36;
 
   // Portada
   doc.setFont("helvetica", "bold").setFontSize(20);
   doc.text("Reporte del ecosistema tecnológico", M, 70);
-
   doc.setFont("helvetica", "normal").setFontSize(11);
   const intro =
     "Propósito: entregar un resumen ejecutable del avance del ecosistema tecnológico " +
@@ -540,7 +525,6 @@ async function exportarReporte () {
   doc.text("1) Mapa de cobertura por dominio", M, 150);
   doc.setFont("helvetica", "normal").setFontSize(10);
   doc.text("A continuación se presentan los dominios COBIT cubiertos por los objetivos y el número total de actividades asociadas.", M, 168);
-
   const cobertura = mapaCobertura(filas);
   doc.autoTable({
     startY: 188, margin: { left: M },
@@ -549,7 +533,6 @@ async function exportarReporte () {
     styles: { fontSize: 9 }, tableWidth: 340, theme: "grid"
   });
   const yAfter1 = doc.lastAutoTable.finalY;
-
   doc.autoTable({
     startY: 188, margin: { left: M + 360 },
     head: [["Dominio", "# Actividades"]],
@@ -574,7 +557,6 @@ async function exportarReporte () {
     styles: { fontSize: 9 }, tableWidth: 240, theme: "grid"
   });
   const yLeft = doc.lastAutoTable.finalY;
-
   const nivelesEco = nivelesAsignadosDesdeEcosistema();
   doc.autoTable({
     startY: cursorY + 6, margin: { left: M + 260 },
@@ -599,14 +581,43 @@ async function exportarReporte () {
     body: (tops.length ? tops : [{herramienta:"-", count:0}]).map(t => [t.herramienta, t.count]),
     styles: { fontSize: 9 }, tableWidth: 340, theme: "grid"
   });
-  const yTbl = doc.lastAutoTable.finalY;
+  cursorY = doc.lastAutoTable.finalY + 12;
 
-  const pie = pieDataURL(tops.slice(0, 8));
-  doc.addImage(pie, "PNG", M + 360, cursorY + 0, 300, 220);
+// ---- Preparar la imagen del PIE ----
+const { url: pieURL, w: imgW, h: imgH } = piePNG(tops);
+const pageW = doc.internal.pageSize.getWidth();
+const pageH = doc.internal.pageSize.getHeight();
 
-  cursorY = Math.max(yTbl, cursorY + 230) + 24;
+// Garantiza espacio vertical; si no cabe, agrega página y resetea cursor
+const ensureSpace = (needed) => {
+  if (cursorY + needed > pageH - M) {
+    doc.addPage("landscape", "a4");
+    cursorY = 60; // margen superior en la nueva página
+  }
+};
 
-  // 4) Tabla maestra de actividades (página nueva)
+// Tamaño dibujado conservando aspecto
+const maxW = pageW - M * 2;
+let drawW = Math.min(imgW, maxW);
+let drawH = imgH * (drawW / imgW);
+
+// Asegura espacio para TÍTULO (16pt) + GRÁFICO
+ensureSpace(16 + drawH);
+
+// --- Título encima del gráfico ---
+doc.setFont("helvetica", "bold").setFontSize(12);
+doc.text("Distribución de herramientas en el ecosistema", M, cursorY);
+cursorY += 16; // baja para dejar lugar a la imagen
+
+// Dibuja la imagen centrada
+const xCentered = M + (maxW - drawW) / 2;
+doc.addImage(pieURL, "PNG", xCentered, cursorY, drawW, drawH);
+
+// Avanza cursor para lo que siga
+cursorY += drawH + 24;
+
+
+  // 4) Tabla maestra de actividades (en nueva página)
   doc.addPage("landscape", "a4");
   let y = 60;
   doc.setFont("helvetica", "bold").setFontSize(14);
@@ -621,14 +632,14 @@ async function exportarReporte () {
     margin: { left: M, right: M },
     head: [["Objetivo", "Práctica", "Actividad", "Nivel", "Herramienta", "Justificación Técnica", "Observaciones", "Integración"]],
     body: filas.map(f => [
-      f.objetivo, f.practica, f.actividad, String(f.nivel_capacidad ?? "-"),
+      f.objetivo, f.practica, f.actividad,
+      String(f.nivel_capacidad ?? "-"),
       f.herramienta, f.justificacion, f.observaciones, f.integracion
     ]),
     styles: { fontSize: 8, cellPadding: 3, overflow: "linebreak" },
     headStyles: { fillColor: [4, 60, 124], textColor: 255 },
     theme: "grid",
     didDrawPage(data) {
-      // Header y paginación
       doc.setFontSize(9).setTextColor(150);
       doc.text("Reporte del ecosistema tecnológico", M, 30);
       const str = `Página ${doc.internal.getNumberOfPages()}`;
